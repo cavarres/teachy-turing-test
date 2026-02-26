@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENEM Turing Test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F9FBFD;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        /* --- Start Page --- */
+        .start-page {
+            display: flex; justify-content: center; align-items: center;
+            min-height: calc(100vh - 40px);
+        }
+        .start-card {
+            background: white; padding: 40px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            max-width: 500px; width: 100%; text-align: center;
+        }
+        .start-card h1 {
+            font-family: 'Quicksand', sans-serif; font-size: 28px; font-weight: 700;
+            color: #000; margin-bottom: 8px;
+        }
+        .start-card .subtitle {
+            font-size: 15px; color: #666; margin-bottom: 24px; line-height: 1.5;
+        }
+        .start-card .description {
+            font-size: 13px; color: #888; margin-bottom: 30px; line-height: 1.6;
+            text-align: left; background: #F9FBFD; padding: 16px; border-radius: 8px;
+            border: 1px solid #e8ecef;
+        }
+        .q-count-info {
+            font-size: 13px; color: #008F87; font-weight: 600; margin-bottom: 20px;
+        }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; }
+        .form-control {
+            width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;
+            font-size: 14px; font-family: inherit;
+        }
+        .form-control:focus { outline: none; border-color: #008F87; box-shadow: 0 0 0 3px rgba(0,143,135,0.1); }
+
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .btn-primary { background: #008F87; color: white; width: 100%; }
+        .btn-primary:hover:not(:disabled) { background: #007A73; }
+
+        /* --- Evaluator Page --- */
+        .eval-page { display: none; }
+
+        .progress-header {
+            background: white; padding: 14px 20px; border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .progress-header h1 { font-family: 'Quicksand', sans-serif; font-size: 18px; font-weight: 700; }
+        .progress-info { font-size: 13px; color: #666; display: flex; align-items: center; gap: 16px; }
+        .progress-bar-wrap { width: 120px; height: 6px; background: #e8ecef; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: #008F87; border-radius: 3px; transition: width 0.3s; width: 0%; }
+
+        /* Question Card */
+        .question-card {
+            background: white; padding: 24px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            margin-bottom: 16px;
+        }
+        .question-card .q-number {
+            font-family: 'Quicksand', sans-serif; font-size: 13px; font-weight: 600;
+            color: #008F87; margin-bottom: 4px;
+        }
+        .question-card .q-discipline {
+            font-size: 12px; color: #999; margin-bottom: 16px;
+        }
+        .question-card .q-prompt {
+            font-size: 15px; line-height: 1.7; color: #2c3e50; white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+        .q-images { margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .q-images img {
+            max-width: 100%; height: auto; border-radius: 8px;
+            border: 1px solid #e8ecef; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .q-images .img-desc {
+            font-size: 12px; color: #888; font-style: italic; margin-top: 4px;
+        }
+        .options-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .options-list li {
+            padding: 12px 16px; background: #F9FBFD; border: 1px solid #e8ecef;
+            border-radius: 8px; font-size: 14px; line-height: 1.5;
+        }
+        .options-list li strong { color: #008F87; margin-right: 8px; }
+
+        /* Evaluation Panel */
+        .eval-panel {
+            background: white; padding: 24px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            margin-bottom: 16px;
+        }
+        .eval-panel h2 {
+            font-family: 'Quicksand', sans-serif; font-size: 16px; font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .eval-panel .eval-question {
+            font-size: 15px; font-weight: 500; margin-bottom: 16px; color: #2c3e50;
+        }
+
+        .choice-group { display: flex; gap: 12px; margin-bottom: 20px; }
+        .choice-btn {
+            flex: 1; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px;
+            background: white; font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; text-align: center;
+        }
+        .choice-btn:hover { border-color: #008F87; background: #E0F7F5; }
+        .choice-btn.selected { border-color: #008F87; background: #008F87; color: white; }
+
+        .confidence-group { margin-bottom: 20px; }
+        .confidence-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: #666; }
+        .confidence-btns { display: flex; gap: 8px; }
+        .conf-btn {
+            flex: 1; padding: 8px; border: 2px solid #e0e0e0; border-radius: 6px;
+            background: white; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+            text-align: center;
+        }
+        .conf-btn:hover { border-color: #1a73e8; background: #e8f0fe; }
+        .conf-btn.active { background: #1a73e8; border-color: #1a73e8; color: white; }
+
+        .reasoning-group { margin-bottom: 20px; }
+        .reasoning-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #666; }
+        .reasoning-group textarea {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 14px; font-family: inherit; resize: vertical; min-height: 80px;
+        }
+        .reasoning-group textarea:focus { outline: none; border-color: #008F87; box-shadow: 0 0 0 3px rgba(0,143,135,0.1); }
+
+        .eval-buttons { display: flex; gap: 12px; }
+        .submit-btn {
+            flex: 1; padding: 14px; background: #FFCC4C; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: #2c3e50;
+        }
+        .submit-btn:hover:not(:disabled) { background: #ffc033; }
+        .submit-btn:disabled { background: #bdc3c7; cursor: not-allowed; color: #888; }
+        .back-btn {
+            padding: 14px 20px; background: white; border: 2px solid #e0e0e0; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #666;
+        }
+        .back-btn:hover { border-color: #008F87; color: #008F87; }
+        .back-btn:disabled { display: none; }
+
+        /* Feedback Banner */
+        .feedback-banner {
+            display: none; padding: 16px 20px; border-radius: 10px;
+            font-size: 15px; font-weight: 600; margin-bottom: 16px; text-align: center;
+        }
+        .feedback-banner.correct {
+            background: #E0F7F5; border: 1px solid #008F87; color: #006B65;
+        }
+        .feedback-banner.wrong {
+            background: #FFF3E0; border: 1px solid #FFB74D; color: #E65100;
+        }
+        .feedback-banner .feedback-detail {
+            font-size: 13px; font-weight: 400; margin-top: 4px; color: inherit; opacity: 0.8;
+        }
+
+        /* Reference Questions Carousel */
+        .reveal-panel {
+            display: none; background: white; padding: 24px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            margin-bottom: 16px;
+        }
+        .reveal-panel h3 {
+            font-family: 'Quicksand', sans-serif; font-size: 15px; font-weight: 700;
+            color: #666; margin-bottom: 4px;
+        }
+        .reveal-panel .reveal-subtitle {
+            font-size: 13px; color: #999; margin-bottom: 16px;
+        }
+
+        /* Carousel */
+        .carousel-container { position: relative; }
+        .carousel-slide {
+            display: none;
+            background: #F9FBFD; border: 1px solid #e8ecef; border-radius: 8px;
+            padding: 20px;
+        }
+        .carousel-slide.active { display: block; }
+        .carousel-slide .ref-header {
+            font-size: 12px; font-weight: 600; color: #008F87; margin-bottom: 12px;
+        }
+        .carousel-slide .ref-prompt {
+            font-size: 14px; line-height: 1.6; color: #2c3e50; white-space: pre-wrap;
+            margin-bottom: 16px; max-height: 250px; overflow-y: auto;
+        }
+        .carousel-slide .ref-images { margin-bottom: 12px; }
+        .carousel-slide .ref-images img {
+            max-width: 100%; max-height: 200px; height: auto; border-radius: 6px;
+            border: 1px solid #e8ecef;
+        }
+        .carousel-slide .ref-options { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .carousel-slide .ref-options li {
+            padding: 8px 12px; background: white; border: 1px solid #e8ecef;
+            border-radius: 6px; font-size: 13px; line-height: 1.4;
+        }
+        .carousel-slide .ref-options li strong { color: #008F87; margin-right: 6px; }
+
+        .carousel-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 14px;
+        }
+        .carousel-btn {
+            padding: 8px 16px; border: 1px solid #e0e0e0; border-radius: 6px;
+            background: white; font-size: 13px; font-weight: 500; cursor: pointer;
+            transition: all 0.2s; color: #666;
+        }
+        .carousel-btn:hover:not(:disabled) { border-color: #008F87; color: #008F87; }
+        .carousel-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .carousel-counter {
+            font-size: 12px; color: #999; font-weight: 500;
+        }
+
+        .next-question-btn {
+            width: 100%; padding: 14px; background: #008F87; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 700; cursor: pointer; color: white; margin-top: 16px;
+        }
+        .next-question-btn:hover { background: #007A73; }
+
+        /* Results Page */
+        .results-page { display: none; }
+        .results-card {
+            background: white; padding: 32px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            margin-bottom: 16px;
+        }
+        .results-card h1 {
+            font-family: 'Quicksand', sans-serif; font-size: 24px; font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-box {
+            background: #F9FBFD; padding: 20px; border-radius: 10px; border: 1px solid #e8ecef;
+            text-align: center;
+        }
+        .stat-box .stat-value { font-size: 32px; font-weight: 700; color: #008F87; }
+        .stat-box .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+
+        .results-table-wrap { overflow-x: auto; }
+        .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .results-table th {
+            text-align: left; padding: 10px 12px; background: #F9FBFD;
+            border-bottom: 2px solid #e8ecef; font-weight: 600; color: #666;
+        }
+        .results-table td { padding: 10px 12px; border-bottom: 1px solid #e8ecef; }
+        .results-table tr:hover td { background: #F9FBFD; }
+        .badge {
+            display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+        }
+        .badge-correct { background: #E0F7F5; color: #008F87; }
+        .badge-wrong { background: #FFF3E0; color: #E65100; }
+        .badge-real { background: #E8F5E9; color: #2E7D32; }
+        .badge-ai { background: #E8F0FE; color: #1565C0; }
+
+        .reasoning-cell { max-width: 200px; font-size: 12px; color: #666; }
+
+        .export-btn {
+            display: inline-block; padding: 10px 20px; background: #008F87; color: white;
+            border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+            margin-top: 16px;
+        }
+        .export-btn:hover { background: #007A73; }
+
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .choice-group { flex-direction: column; }
+            .confidence-btns { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- START PAGE -->
+        <div class="start-page" id="startPage">
+            <div class="start-card">
+                <h1>ENEM Turing Test</h1>
+                <p class="subtitle">Can you tell AI-generated questions from original ENEM questions?</p>
+                <div class="description">
+                    You will see ENEM-style questions — some are <strong>original ENEM questions</strong> from the 2025 exam, and some were <strong>generated by AI</strong>. For each question, decide which one it is, explain your reasoning, and rate your confidence.<br><br>
+                    After each answer, you'll see whether you were right and — for AI-generated questions — the real ENEM questions that were used as references to generate it.
+                </div>
+                <div class="q-count-info" id="qCountInfo"></div>
+                <div class="form-group">
+                    <label for="nameInput">Your name:</label>
+                    <input type="text" id="nameInput" class="form-control" placeholder="Enter your name">
+                </div>
+                <button class="btn btn-primary" id="startBtn" disabled>Start the test</button>
+            </div>
+        </div>
+
+        <!-- EVAL PAGE -->
+        <div class="eval-page" id="evalPage">
+            <div class="progress-header">
+                <h1>ENEM Turing Test</h1>
+                <div class="progress-info">
+                    <span id="progressText">1 / 20</span>
+                    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="q-number" id="qNumber"></div>
+                <div class="q-discipline" id="qDiscipline"></div>
+                <div class="q-images" id="qImages"></div>
+                <div class="q-prompt" id="qPrompt"></div>
+                <ul class="options-list" id="qOptions"></ul>
+            </div>
+
+            <div class="feedback-banner" id="feedbackBanner">
+                <div id="feedbackText"></div>
+                <div class="feedback-detail" id="feedbackDetail"></div>
+            </div>
+
+            <div class="reveal-panel" id="revealPanel">
+                <h3>Reference Questions Used</h3>
+                <p class="reveal-subtitle">These real ENEM questions were used as few-shot examples to generate this AI question:</p>
+                <div class="carousel-container" id="carouselContainer"></div>
+                <div class="carousel-nav">
+                    <button class="carousel-btn" id="carouselPrev" disabled>&larr; Previous</button>
+                    <span class="carousel-counter" id="carouselCounter">1 / 5</span>
+                    <button class="carousel-btn" id="carouselNext">Next &rarr;</button>
+                </div>
+                <button class="next-question-btn" id="nextQuestionBtn">Next question</button>
+            </div>
+
+            <!-- Next button shown for real questions after feedback -->
+            <button class="next-question-btn" id="nextBtnSimple" style="display:none;">Next question</button>
+
+            <div class="eval-panel" id="evalPanelForm">
+                <h2>Your evaluation</h2>
+                <div class="eval-question">What is this question?</div>
+
+                <div class="choice-group" id="choiceGroup">
+                    <button class="choice-btn" data-value="real" id="btnReal">Original ENEM question</button>
+                    <button class="choice-btn" data-value="ai" id="btnAI">AI-generated question</button>
+                </div>
+
+                <div class="confidence-group">
+                    <label>How confident are you?</label>
+                    <div class="confidence-btns" id="confidenceBtns">
+                        <button class="conf-btn" data-value="1">1 — Guessing</button>
+                        <button class="conf-btn" data-value="2">2 — Slight hunch</button>
+                        <button class="conf-btn" data-value="3">3 — Somewhat sure</button>
+                        <button class="conf-btn" data-value="4">4 — Quite sure</button>
+                        <button class="conf-btn" data-value="5">5 — Very sure</button>
+                    </div>
+                </div>
+
+                <div class="reasoning-group">
+                    <label for="reasoningInput">Any feedback about this question? (optional)</label>
+                    <textarea id="reasoningInput" placeholder="Anything that stood out, felt off, or caught your attention..."></textarea>
+                </div>
+
+                <div class="eval-buttons">
+                    <button class="back-btn" id="backBtn" disabled>Back</button>
+                    <button class="submit-btn" id="submitBtn" disabled>Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS PAGE -->
+        <div class="results-page" id="resultsPage">
+            <div class="results-card">
+                <h1>Results</h1>
+                <p style="margin-bottom:20px; color:#666; font-size:14px;">Here's how you did, <strong id="resultsName"></strong>:</p>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="statCorrect">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="statAccuracy">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+
+                <div class="results-table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Discipline</th>
+                                <th>Truth</th>
+                                <th>Your Answer</th>
+                                <th>Result</th>
+                                <th>Confidence</th>
+                                <th>Your Reasoning</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody"></tbody>
+                    </table>
+                </div>
+
+                <button class="export-btn" id="exportBtn">Export CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ============================================================
+    // DATA — Injected by build_turing_test.py
+    // ============================================================
+    const REAL_QUESTIONS = [{"id": "6BB65DAC6656-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Os sapinhos-ponta-de-flecha constituem um grupo de espécies encontradas na América Central e do Sul. Seus venenos são obtidos por meio do consumo de algumas formigas e cupins que se alimentam de plantas que contêm esses venenos. Esses anfíbios são usados para envenenar as flechas das zarabatanas dos caçadores nativos. Quando capturados e criados em condições artificiais, ou quando nascidos em cativeiro, não são tóxicos.\n\nBADIO, B. et al. Epibatidine: Discovery and Definition as a Potent Analgesic and Nicotinic Agonist. Med. Chem. Res.,\nv. 4, 1994 (adaptado).\n\nA perda da capacidade de se obter a toxina nos nascidos em cativeiro é causada pela", "answer_options": {"A": "diferença de umidade entre os ambientes.", "B": "ausência de alimentação natural.", "C": "adaptação ao novo ambiente.", "D": "mudança de comportamento.", "E": "variabilidade genética."}, "images": []}, {"id": "36A5D0B27BCA-2025", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Glory Ames, from the White Earth reservation, is frustrated that despite the presence of several indigenous reservations near Moorhead, local Halloween stores still feature a western section with costumes such as \"pow wow princess\".\nEven worse, despite a long-running debate about racism and cultural appropriation, often prompted by backlash against celebrities and politicians for donning offensive costumes, people continue to wear such costumes.\nLast Halloween, Ames spotted a photo on Instagram of a girl dressed as a Native American with a bullet in her forehead. She immediately reported it to the social media platform and had it removed.\n\"They blatantly take certain aspects of our culture, race, religion, and use it for their advantage and ignore the people living it\", said Ames.\n\nLIU, M. C. M. Disponível em: www.washingtonpost.com. Acesso em: 12 maio 2024 (adaptado).\n\nAo abordar um aspecto da celebração do Halloween, esse texto tem por objetivo", "answer_options": {"A": "denunciar a violência contra crianças indígenas.", "B": "descrever costumes tradicionais em celebrações indígenas.", "C": "valorizar as vestimentas características dos povos originários.", "D": "criticar a exploração indevida de elementos da identidade indígena.", "E": "sugerir ações de combate ao preconceito contra os povos originários."}, "images": []}, {"id": "A934616E9857-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "O aquecimento em fogões por indução utiliza bobinas para produzir um campo magnético variável. Essa bobina se localiza abaixo do vidro cerâmico sobre o qual a panela é apoiada. O mecanismo aquece apenas a panela que se encontra na zona de cozimento, o que é uma das principais vantagens em relação ao uso do fogão a gás ou de resistência elétrica.\n\nPEREIRA, A. B. et al. Fogões de indução: montagem e testes de um circuito disponível. Disponível em: https://publicacoes.fatecsetaozinho.edu.br. Acesso em: 21 maio 2025 (adaptado).\n\nO uso do campo magnético variável tem a finalidade de", "answer_options": {"A": "imantar o material da panela por indução.", "B": "movimentar os átomos de ferro concentrados no fundo da panela.", "C": "emitir radiação eletromagnética, aquecendo a panela através do vidro cerâmico.", "D": "induzir corrente elétrica na parte inferior da panela, aquecendo-a por efeito Joule.", "E": "gerar um fluxo de corrente de convecção no ar contido entre a região da bobina e o vidro cerâmico."}, "images": [{"description": "Cross-sectional diagram of an induction cooktop showing a pot with heated contents, ceramic glass surface, and induction coil below creating a magnetic field. Labels indicate heated contents, heat transfer to panel, ceramic glass, magnetic field created by induction coil, and induction coil.", "path": "../../assets/enem_images/2025_d2/q120_fig1.png"}]}, {"id": "E9AE28D3FCB6-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "As cangas são ambientes resultantes da atuação, ao longo de milhões de anos, de chuvas, enxurradas, calor e ventos em rochas ricas em ferro. São compostas por até 90% de óxidos de ferro e contêm solos muito ácidos, rasos, com reduzidos índices de fertilidade e temperatura que atingem quase 70 °C na superfície. Ao contrário do que se imagina, esse tipo de ambiente abriga comunidades de plantas e animais com elevado número de espécies e endemismo restrita.\n\nCARMO, F. F. et al. Ilhas de ferro estratégicas para a conservação. Disponível em: http://cienciahojeorg.br. Acesso em: 2 dez. 2018 (adaptado).\n\nA seleção adaptativa nesses ambientes favorece a ocorrência de espécies", "answer_options": {"A": "exóticas.", "B": "migratórias.", "C": "endêmicas.", "D": "dominantes.", "E": "generalistas."}, "images": []}, {"id": "D0E844C84286-2025", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}, {"id": "8FDD73B23164-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "A quantidade de CO₂ na atmosfera da Terra aumentou em 50%, e a temperatura está agora cerca de 1,2 °C mais quente em comparação ao século XIX. O ritmo de aumento da temperatura precisa diminuir se quisermos evitar as piores consequências das mudanças climáticas. Cientistas afirmam que o aquecimento global precisa ser mantido em 1,5 °C até o ano 2100. No entanto, a menos que outras medidas sejam tomadas, o planeta ainda pode esquentar mais de 2 °C até o final deste século. Na prática, os países precisam enfrentar as mudanças climáticas com ações mitigatórias que reduzam tanto as emissões quanto os níveis de CO₂ na atmosfera.\n\nUm guia rápido para entender as mudanças climáticas. Disponível em: www.bbc.com. Acesso em: 6 dez. 2021 (adaptado).\n\nQual ação mitigadora auxiliaria na remoção desse gás presente na atmosfera, reduzindo seus níveis?", "answer_options": {"A": "Plantar mais árvores.", "B": "Instalar mais usinas eólicas.", "C": "Ampliar o uso de energia solar.", "D": "Manter os combustíveis fósseis no solo.", "E": "Produzir menos resíduos sólidos urbanos."}, "images": []}, {"id": "F3F8C489D8F1-2025", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A artista Marija Tiurina criou uma série chamada Palavras Intraduzíveis, com diversas ilustrações detalhadas que traduzem os sentidos desses vocábulos, que nenhuma palavra única em outras línguas pode descrever.\n\nROMANZOTI, N. 9 desenhos que ilustram palavras sem tradução para o português. Disponível em: https://hypescience.com.\nAcesso em: 10 jun. 2019 (adaptado).\n\nO uso do texto verbal nesse desenho assume uma função de", "answer_options": {"A": "descrever de forma técnica a ilustração.", "B": "destacar os múltiplos sentidos do verbete.", "C": "explicar o significado da expressão ilustrada.", "D": "apresentar termos equivalentes em outras línguas.", "E": "apontar para a dificuldade de compreensão do termo."}, "images": [{"description": "An illustration showing hands cupped together holding water, with a person or figure floating/swimming in the water within the cupped hands. The image has a green-blue color scheme with the text \"Gufra\" visible and Portuguese text below it reading \"A quantidade de água que pode ser segurada com as mãos\"", "path": "../../assets/enem_images/2025_d1/q045_fig1.png"}]}, {"id": "0E460DE443E7-2025", "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Macedônia do Norte\nAcordo entra em vigor e país muda oficialmente de nome\n\nEntrou em vigor, em 2019, o acordo que determina a mudança de nome da Macedônia para Macedônia do Norte. A troca põe fim — ao menos por enquanto — no impasse entre essa antiga república da Iugoslávia e a vizinha Grécia. O governo grego se opunha ao uso do nome Macedônia pelo novo país vizinho porque a Grécia tem uma província no norte com o mesmo nome. Por causa desse impasse, a Grécia bloqueou as negociações de adesão de seu vizinho à União Europeia. Depois de negociações, as duas partes chegaram a um acordo.\n\nDisponível em: https://g1.globo.com. Acesso em: 7 nov. 2021 (adaptado).\n\nPara o país originado da antiga Iugoslávia, a mudança de nome é uma estratégia política para", "answer_options": {"A": "criar a moeda própria.", "B": "proteger a cultura local.", "C": "subjugar a minoria étnica.", "D": "expandir o território nacional.", "E": "intensificar a integração regional."}, "images": []}, {"id": "76E5ECB29C71-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Em sua maioria, os equipamentos eletrônicos domésticos demandam baixa potência elétrica em corrente contínua. Para alimentá-los, uma fonte externa ou embutida transforma a corrente alternada em corrente contínua de baixa tensão. Entretanto, cada equipamento tem suas especificidades, e muitas vezes não é possível simplesmente trocar essas fontes sem levar em conta a tensão, a corrente ou a potência elétrica de saída.\n\nConsidere um equipamento de resistência elétrica Rc que funciona corretamente apenas em um dado valor de tensão. Porém, a única fonte de alimentação disponível fornece uma tensão 20% superior à tensão recomendada. Para adaptar essa fonte ao aparelho, a associação de um resistor de proteção Rp, de potência adequada, se faz necessária.\n\nA configuração adequada do circuito e o valor do resistor de proteção, em relação ao valor da resistência do equipamento, são:", "answer_options": {"A": "Rp = 0,2 Rc", "B": "Rp = 1,2 Rc", "C": "Rp = 1,2 Rc", "D": "Rp = 2,2 Rc", "E": "Rp = 0,2 Rc"}, "images": [{"description": "Five electrical circuit diagrams labeled A through E, each showing different configurations of resistors Rc and Rp. Each diagram shows various values of Rp in relation to Rc (0,2 Rc, 1,2 Rc, etc.) with different series and parallel arrangements.", "path": "../../assets/enem_images/2025_d2/q113_fig1.png"}]}, {"id": "012FE7AC6A91-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "O monstro de gila, um lagarto encontrado em um deserto dos Estados Unidos, apresenta adaptações à falta de alimento nesse ambiente. Esse lagarto possui um hormônio que controla os níveis de açúcar em seu próprio sangue. Foi observado que esse hormônio também controla os níveis de açúcar no sangue de pessoas diabéticas.\n\nRUSSELL, C. Ozempic e outros remédios inspirados em veneno de animais. Disponível em: www.bbc.com. Acesso em: 6 dez. 2024 (adaptado).\n\nConsiderando que animais de um mesmo grupo taxonômico podem apresentar características adaptativas semelhantes em ambientes similares, onde seria mais provável encontrar lagartos com essas características no território brasileiro?", "answer_options": {"A": "Cerrado.", "B": "Pampas.", "C": "Caatinga.", "D": "Restinga.", "E": "Pantanal."}, "images": []}, {"id": "8E5872A94E5A-2025", "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Fragmentada entre pequenos grupos, fragilizada pela ausência de algum tipo de organização ampla, tendo que carregar o peso do preconceito racial que se transfere do negro para a cultura negra, a religião afro-brasileira em poucas situações deve sair melhor na competição — desigual — com outras religiões. Silenciosamente, assiste-se hoje a um verdadeiro massacre das religiões afro-brasileiras.\n\nPRANDI, R. O Brasil com axé. Estudos Avançados, n. 52, dez. 2004.\n\nNo processo de invisibilização dos cultos afro-brasileiros, o texto associa os seguintes elementos essenciais:", "answer_options": {"A": "Ausência de soluções partidárias e rejeição da laicidade.", "B": "Precariedade de coesão representativa e recusa da alteridade.", "C": "Insuficiência de estruturas decisórias e exclusão da dialogicidade.", "D": "Inexistência de direitos constitucionais e negação do ecumenismo.", "E": "Efemeridde das relações políticas e debilidade do pertencimento étnico."}, "images": []}, {"id": "3109B73F01B4-2025", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "— Vejo, disse ele com algum acanhamento, que o doutor não é nenhum pé-rapado, mas nunca me facilitaram... Minha filha Inocência fez 18 anos pelo Natal, e é rapariga que pela feição parece moça de cidade, muito ariscazinha de modos, mas bonita e boa deveras... Coitada, foi criada sem mãe, e aqui nestes fundões. [...]\n— Ora muito que bem, continuou Pereira caindo aos poucos na habitual garrulice, quando vi a menina tomar corpo, tratei logo da casá-la.\n— Ah! é casada? perguntou Cirino.\n— Isto é, é não é. A coisa estava arrumada. Por aqui costuma labutar no costelo do gado para São Paulo um homem de mão-cheia, que talvez o sr. conheça... o Manecão Doca...\n— ... esse prendeu Cirino mandando a cabeça.\n— Pois isso é um homem às direitas, desempenado e trabucador como ele só... fura estes sertões todos e vem tangendo pontes de gado que metem pasmo. Também dizem que tem bicho muito e ajuntado cobre grosso, o que é possível, porque não é gastador nem dado a mulheradas. Uma feita que estava aqui de pousada... olhe, mesmo neste lugar onde estava mecê inda agorinha, falei-lhe em casamento... isto é, dei-lhe uns toques... porque os pais devem tomar isso só para bem das suas famílias; não acha?\n— Boa dúvida, aprovou Cirino, dou-lhe toda a razão; era do seu dever.\n\nTAUNAY, A. d'E. Inocência. Disponível em: www.dominiopublico.gov.br. Acesso em: 29 fev. 2024.\n\nNesse trecho, ao se referir à sua filha, o pai de Inocência reproduz os ideais românticos, presentes na", "answer_options": {"A": "valorização do ambiente rural na formação moral da mulher.", "B": "figura decorativa da mulher ante o protagonismo masculino.", "C": "equivalência de origem social para a harmonia do casal.", "D": "importância do dote como condição para o casamento.", "E": "aura de mistério sobre a identidade da jovem."}, "images": []}, {"id": "A31A95718E3C-2025", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Existe um processo de purificação de água em que são removidos os sais dissolvidos. A água que passa por esse processo é muito usada em laboratórios de química, em indústrias (como solvente), em baterias de carros etc. Entretanto, esse tipo de água não é adequado para ingestão, pois pode causar problemas de saúde, como carência iônica e diarreia.\n\nEssa água é chamada de", "answer_options": {"A": "dura.", "B": "pesada.", "C": "sanitária.", "D": "destilada.", "E": "oxigenada."}, "images": []}, {"id": "C6511FAE9E64-2025", "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Do ponto de vista administrativo e judicial, a desapropriação da fazenda Cabaceiras, localizada na região sul do estado do Pará, é a primeira na história movida pelo desrespeito à função social de um imóvel rural, como prevê a Constituição Federal de 1988, em decorrência da exploração do \"trabalho em condições análogas à escravidão\". Na realidade, essa desapropriação não se deu apenas pela ocorrência de relações de trabalho extremamente degradantes, mas também pelas graves infrações ambientais verificadas na fazenda — o que também configura um ataque à função social da terra, de acordo com os preceitos constitucionais.\n\nBARROS, C. I. A conquista da fazenda Cabaceiras. Disponível em: www.agb.org.br. Acesso em: 15 maio 2023.\n\nO texto considera a promoção da justiça como um mecanismo de", "answer_options": {"A": "manutenção da ordem agrária.", "B": "legitimação da propriedade privada.", "C": "hegemonia das classes dominantes.", "D": "revisão das desigualdades econômicas.", "E": "homogeneização da distribuição fundiária."}, "images": []}, {"id": "4EA8BCEAF5AF-2025", "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Produção e exportações brasileiras no ranking mundial em 2019\n\n[Tabela mostrando dados de produção e exportação brasileira]\nAçúcar: Produz 29,5 MI t (2°), Exporta 19,6 MI t (1°), Share 36%\nCafé: Produz 3,8 MI t (1°), Exporta 1,9 MI t (1°), Share 27%\nSuco de laranja: Produz 1,3 MI t (1°), Exporta 1,2 MI t (1°), Share 76%\nSoja: Produz 117 MI t (2°), Exporta 75,4 MI t (1°), Share 51%\nCarne de frango: Produz 13,3 MI t (2°), Exporta 3,6 MI t (1°), Share 38%\nCarne bovina: Produz 9,9 MI t (2°), Exporta 2,0 MI t (1°), Share 22%\nMilho: Produz 101 MI t (3°), Exporta 39,0 MI t (3°), Share 20%\nCarne suína: Produz 3,7 MI t (4°), Exporta 0,7 MI t (6°), Share 10%\n\nFonte: USDA, 2020. Elaboração CNA.\n*Fatia de participação na produção mundial.\n\nDisponível em: www.cnabrasil.org.br. Acesso em: 15 out. 2021.\n\nQual condição favoreceu o cenário produtivo exposto na figura?", "answer_options": {"A": "Redução do poder de compra da população brasileira.", "B": "Ampliação da entrada do capital agroindustrial no campo.", "C": "Diminuição do uso de trabalho especializado na agropecuária.", "D": "Valorização da moeda nacional em relação ao dólar americano.", "E": "Inclusão de pequenas propriedades em cultivos de subsistência."}, "images": [{"description": "Infographic showing Brazilian production and exports ranking in 2019. Contains icons for different agricultural products (sugar, coffee, orange juice, soy, chicken, beef, corn, pork) with their respective production volumes, export volumes, and world market share percentages displayed in colored boxes.", "path": "../../assets/enem_images/2025_d1/q063_fig1.png"}]}, {"id": "68AFCE3A7F1D-2025", "discipline": "Matemática e suas Tecnologias", "topic": null, "prompt": "Dez casais fundaram um grupo de dança e decidiram constituir uma diretoria com três cargos: presidente, secretário e tesoureiro. Para ser representatividade, decidiu-se que no máximo uma pessoa por casal poderá ocupar um cargo nessa diretoria.\n\nQuantas diretorias diferentes podem ser constituídas por esses 10 casais?", "answer_options": {"A": "10 × 9 × 8", "B": "20 × 18 × 16", "C": "20 × 19 × 18", "D": "10 × 9 × 8 × 2", "E": "20 × 18 × 16 × 2"}, "images": []}];
+    const AI_QUESTIONS = [{"id": "generated-001", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Interpretação de Texto", "prompt": "Quando se fala em memória, pensamos quase automaticamente no passado, como se lembrar fosse apenas um exercício de recuperação daquilo que já se viveu. Mas a memória não é um arquivo morto. Ela é, antes de tudo, um gesto de escolha: seleciona, reorganiza, descarta. Nenhuma lembrança chega até nós intacta — toda recordação passa pelo filtro do presente, das necessidades de agora, dos afetos que nos constituem hoje. É por isso que dois irmãos, criados na mesma casa, podem guardar versões tão distintas da infância que parecem ter crescido em famílias diferentes.\n\nHá nisso uma dimensão política que raramente se reconhece. Quando um grupo social reivindica o direito de narrar sua própria história, está disputando não apenas o registro dos fatos, mas o sentido que esses fatos assumem na vida coletiva. Memória, nesse caso, não é nostalgia: é instrumento de presença. Lembrar, para esses grupos, significa recusar o apagamento e afirmar que suas experiências têm valor no tecido social. Não se trata de voltar ao passado, mas de garantir que ele ilumine as urgências do presente.\n\nLIMA, R. Memória como gesto político. Revista Entrelinhas, São Paulo, n. 47, p. 22-24, mar. 2023. (adaptado)\n\nDe acordo com a argumentação desenvolvida no texto, a memória se configura como um \"instrumento de presença\" porque", "answer_options": {"A": "preserva com fidelidade os acontecimentos vividos por determinado grupo social.", "B": "possibilita que experiências historicamente silenciadas adquiram relevância no contexto atual.", "C": "substitui o registro oficial dos fatos por versões subjetivas e individuais.", "D": "promove o retorno a vivências passadas como forma de resistência à modernidade.", "E": "garante que diferentes grupos compartilhem uma mesma interpretação dos eventos históricos."}, "images": [], "reference_questions": [{"id": "8BBEF601900C-2025", "question_number": 7, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "O elemento que caracteriza esse texto como uma crônica é a", "answer_options": {"A": "defesa das opiniões da autora sobre um tema de interesse coletivo.", "B": "exposição sobre o uso de tecnologias nas práticas de escrita atuais.", "C": "abordagem de fatos do contexto pessoal em uma perspectiva reflexiva.", "D": "utilização de recursos linguísticos para a interlocução direta com o leitor.", "E": "apresentação de acontecimentos segundo a ordem de sucessão no tempo."}, "images": []}, {"id": "36F9B8D8902A-2025", "question_number": 8, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse texto, o que caracteriza a escrita \"de próprio punho\" é a letra manuscrita, enquanto a escrita digital é ilustrada pelo(a)", "answer_options": {"A": "utilização de tecnologias diversificadas.", "B": "desenvolvimento de novos recursos de escrita.", "C": "possibilidade de interações mediadas por telas.", "D": "diversidade de fontes tipográficas que estão disponíveis.", "E": "delimitação dos espaços onde a produção textual ocorre."}, "images": []}, {"id": "AF53E88208E0-2025", "question_number": 6, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "No que diz respeito ao gênero bilhete, a autora dessa crônica", "answer_options": {"A": "ressalta a formalidade na comunicação com as pessoas de sua convivência.", "B": "critica a ansiedade causada pela velocidade da comunicação.", "C": "expressa a obrigatoriedade de concisão nas anotações.", "D": "questiona a prática da escrita de próprio punho.", "E": "apresenta a diversidade de usos no cotidiano."}, "images": []}, {"id": "573B7D323C7D-2025", "question_number": 34, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Com base na relação dos elementos não verbais com a frase \"VOCÊ (NÃO) ESTÁ SOZINHO\", nessa capa de revista, a função poética fica evidente, pois", "answer_options": {"A": "essa frase informa sobre os riscos de um determinado comportamento social.", "B": "o conteúdo da mensagem expressa a atitude do enunciador sobre o tema.", "C": "a construção dessa frase possibilita mais de uma interpretação.", "D": "essa frase estabelece um diálogo direto com o leitor.", "E": "a linguagem utilizada volta-se para si mesma."}, "images": [{"description": "Magazine cover for Galileu showing the title \"A CIÊNCIA AJUDA VOCÊ A MUDAR O MUNDO\" (Science helps you change the world), ED. 371 FEVEREIRO DE 2023. The cover features multiple illustrated people floating in pool floats/life rings with the text \"VOCÊ (NÃO) ESTÁ SOZINHO\" (You are (not) alone). Below states \"NO BRASIL, METADE DA POPULAÇÃO SE SENTE SOLITÁRIA, E A MESMA SENSAÇÃO CRESCE EM OUTRAS PARTES DO MUNDO. POR QUE DEVEMOS REPENSAR NOSSAS RELAÇÕES?\" (In Brazil, half the population feels lonely, and the same sensation grows in other parts of the world. Why should we rethink our relationships?)", "path": "../../assets/enem_images/2025_d1/q034_fig1.png"}]}, {"id": "D0E844C84286-2025", "question_number": 9, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}]}, {"id": "generated-002", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Literatura", "prompt": "Leia o texto a seguir.\n\nNa minha terra tem palmeiras,\nOnde canta o Sabiá;\nAs aves, que aqui gorjeiam,\nNão gorjeiam como lá.\n\nNosso céu tem mais estrelas,\nNossas várzeas têm mais flores,\nNossos bosques têm mais vida,\nNossa vida mais amores.\n\nEm cismar, sozinho, à noite,\nMais prazer encontro eu lá;\nMinha terra tem palmeiras,\nOnde canta o Sabiá.\n\nMinha terra tem primores,\nQue tais não encontro eu cá;\nEm cismar — sozinho, à noite —\nMais prazer encontro eu lá;\nMinha terra tem palmeiras,\nOnde canta o Sabiá.\n\nNão permita Deus que eu morra,\nSem que eu volte para lá;\nSem que desfrute os primores\nQue não encontro por cá;\nSem qu'inda aviste as palmeiras,\nOnde canta o Sabiá.\n\nDIAS, G. Canção do exílio. In: Primeiros cantos. Rio de Janeiro: Laemmert, 1847 (fragmento).\n\nO poema de Gonçalves Dias é considerado emblemático de um momento da literatura brasileira em que a construção da identidade nacional orientava a produção artística. Nesse contexto, o recurso expressivo central do poema é", "answer_options": {"A": "a idealização da pátria distante por meio da oposição entre os advérbios \"lá\" e \"cá\", que reforça o sentimento de saudade e exaltação nacionalista.", "B": "a descrição objetiva e documental da paisagem tropical brasileira, que busca registrar com fidelidade científica a fauna e a flora nacionais.", "C": "a ironia do eu lírico ao comparar a terra natal com o lugar onde se encontra, evidenciando uma crítica à sociedade brasileira da época.", "D": "a musicalidade construída pela repetição do refrão, cuja função principal é reproduzir o canto do sabiá em sua forma onomatopaica.", "E": "a subjetividade expressa no uso da primeira pessoa, que revela a angústia existencial do poeta diante da impossibilidade de retorno à infância."}, "images": [], "reference_questions": [{"id": "573B7D323C7D-2025", "question_number": 34, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Com base na relação dos elementos não verbais com a frase \"VOCÊ (NÃO) ESTÁ SOZINHO\", nessa capa de revista, a função poética fica evidente, pois", "answer_options": {"A": "essa frase informa sobre os riscos de um determinado comportamento social.", "B": "o conteúdo da mensagem expressa a atitude do enunciador sobre o tema.", "C": "a construção dessa frase possibilita mais de uma interpretação.", "D": "essa frase estabelece um diálogo direto com o leitor.", "E": "a linguagem utilizada volta-se para si mesma."}, "images": [{"description": "Magazine cover for Galileu showing the title \"A CIÊNCIA AJUDA VOCÊ A MUDAR O MUNDO\" (Science helps you change the world), ED. 371 FEVEREIRO DE 2023. The cover features multiple illustrated people floating in pool floats/life rings with the text \"VOCÊ (NÃO) ESTÁ SOZINHO\" (You are (not) alone). Below states \"NO BRASIL, METADE DA POPULAÇÃO SE SENTE SOLITÁRIA, E A MESMA SENSAÇÃO CRESCE EM OUTRAS PARTES DO MUNDO. POR QUE DEVEMOS REPENSAR NOSSAS RELAÇÕES?\" (In Brazil, half the population feels lonely, and the same sensation grows in other parts of the world. Why should we rethink our relationships?)", "path": "../../assets/enem_images/2025_d1/q034_fig1.png"}]}, {"id": "A188B4725930-2025", "question_number": 23, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "TEXTO I\n\nOs trabalhos da exposição Adriana Varejão: suturas, fissuras, ruínas colocam em pauta o exame da história visual, das tradições iconográficas europeias e do fazer artístico ocidental. O corte, a rachadura, o talho e a fissura são elementos de narrativas recorrentes nos trabalhos da artista desde 1992. A produção mais recente incluem pinturas tridimensionais de grande escala das séries Ruínas de charque e Linotipia.\n\nDisponível em: https://pinacoteca.org.br.\nAcesso em: 10 jan. 2025 (adaptado).\n\nTEXTO II\n\nVAREJÃO, A. Azulejaria em carne viva. Óleo sobre tela, poliuretano, madeira e alumínio, 160 × 200 × 25 cm. 1999.\n\nDisponível em: www.adrianavarejao.net. Acesso em: 10 jan. 2025.\n\nA utilização de recursos visuais como suturas, cortes e ruínas por Adriana Varejão, na obra Azulejaria em carne viva, remete à(s)", "answer_options": {"A": "sobreposição da cultura brasileira à arte portuguesa.", "B": "manutenção da representação realista na arte brasileira.", "C": "violências desencadeadas pelo processo colonial brasileiro.", "D": "desigualdades nos incentivos à produção artística brasileira.", "E": "negligência na conservação do patrimônio arquitetônico luso-brasileiro."}, "images": [{"description": "Artwork showing a tiled wall with Portuguese-style azulejo tiles in blue and white patterns. The central area appears to be 'torn open' revealing a reddish, flesh-like interior, creating a dramatic contrast between the decorative colonial tiles and the raw, organic material beneath.", "path": "../../assets/enem_images/2025_d1/q023_fig1.png"}]}, {"id": "36F9B8D8902A-2025", "question_number": 8, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse texto, o que caracteriza a escrita \"de próprio punho\" é a letra manuscrita, enquanto a escrita digital é ilustrada pelo(a)", "answer_options": {"A": "utilização de tecnologias diversificadas.", "B": "desenvolvimento de novos recursos de escrita.", "C": "possibilidade de interações mediadas por telas.", "D": "diversidade de fontes tipográficas que estão disponíveis.", "E": "delimitação dos espaços onde a produção textual ocorre."}, "images": []}, {"id": "408CB2EC35A1-2025", "question_number": 13, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Art. 26-A. Nos estabelecimentos de ensino fundamental e médio, oficiais e particulares, torna-se obrigatório o ensino sobre História e Cultura Afro-Brasileira.\n\n§ 1º O conteúdo programático a que se refere o caput deste artigo incluirá o estudo da História da África e dos Africanos, a luta dos negros no Brasil, a cultura negra brasileira e o negro na formação da sociedade nacional, resgatando a contribuição do povo negro nas áreas social, econômica e política pertinentes à História do Brasil.\n\n§ 2º Os conteúdos referentes à História e Cultura Afro-Brasileira serão ministrados no âmbito de todo o currículo escolar, em especial nas áreas de Educação Artística e de Literatura e História Brasileiras.\n\nBRASIL. Lei n. 10.639/2003. Disponível em: www.gov.br/planalto. Acesso em: 19 maio 2024.\n\nO emprego da norma-padrão é justificado nesse texto", "answer_options": {"A": "pela especialização de seu público-alvo.", "B": "pela relevância cultural de seu conteúdo.", "C": "pelos contextos pedagógicos em que circula.", "D": "pela importância para os grupos étnico-raciais.", "E": "pelas características do gênero a que pertence."}, "images": []}, {"id": "8BBEF601900C-2025", "question_number": 7, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "O elemento que caracteriza esse texto como uma crônica é a", "answer_options": {"A": "defesa das opiniões da autora sobre um tema de interesse coletivo.", "B": "exposição sobre o uso de tecnologias nas práticas de escrita atuais.", "C": "abordagem de fatos do contexto pessoal em uma perspectiva reflexiva.", "D": "utilização de recursos linguísticos para a interlocução direta com o leitor.", "E": "apresentação de acontecimentos segundo a ordem de sucessão no tempo."}, "images": []}]}, {"id": "generated-003", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Artes e Cultura", "prompt": "TEXTO I\n\nA exposição Trançados Vivos, da artista cearense Iracema Macedo, reúne instalações têxteis de grande escala produzidas com fibras naturais extraídas de palmeiras do semiárido nordestino. As obras dialogam com técnicas ancestrais de cestaria e tecelagem praticadas por comunidades indígenas e quilombolas, reinterpretadas pela artista em suportes contemporâneos. Em entrevista ao catálogo da mostra, Macedo afirma: \"Meu trabalho nasce da escuta. Antes de trançar qualquer fibra, passo semanas com as artesãs, aprendendo seus gestos e seus silêncios. O que exponho na galeria não é uma tradução do saber popular — é uma conversa entre dois mundos que a história insistiu em separar.\"\n\nDISPONÍVEL em: www.museudeartecontemporanea.org.br. Acesso em: 12 mar. 2023 (adaptado).\n\nTEXTO II\n\nMACEDO, I. Raízes suspensas. Instalação com fibras de carnaúba, pigmentos naturais e estrutura metálica, 320 × 180 × 90 cm. 2022.\n\nDisponível em: www.iracemamacedo.art.br. Acesso em: 12 mar. 2023.\n\nAo articular saberes tradicionais e linguagem contemporânea, a obra de Iracema Macedo evidencia que", "answer_options": {"A": "a produção artística contemporânea substitui as práticas culturais tradicionais por novas formas de expressão.", "B": "o espaço institucional da galeria legitima saberes populares ao deslocá-los de seus contextos originais.", "C": "a arte pode funcionar como mediação entre matrizes culturais historicamente hierarquizadas.", "D": "as técnicas artesanais indígenas e quilombolas são preservadas integralmente pela artista em suas instalações.", "E": "a valorização da cultura popular depende de sua incorporação pelos circuitos formais de arte."}, "images": [{"description": "Instalação artística contemporânea em espaço expositivo de paredes brancas. Uma grande peça têxtil feita de fibras naturais, como sisal e carnaúba, em tons terrosos — ocre, marrom e terracota — encontra-se suspensa do teto. A peça apresenta padrões geométricos inspirados em técnicas indígenas de cestaria e tecelagem, com formas orgânicas e fluidas. A iluminação direcional projeta sombras sobre a parede ao fundo.", "path": "output/batch_2026-02-25_204850/questions/question_003_fig1.png"}], "reference_questions": [{"id": "408CB2EC35A1-2025", "question_number": 13, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Art. 26-A. Nos estabelecimentos de ensino fundamental e médio, oficiais e particulares, torna-se obrigatório o ensino sobre História e Cultura Afro-Brasileira.\n\n§ 1º O conteúdo programático a que se refere o caput deste artigo incluirá o estudo da História da África e dos Africanos, a luta dos negros no Brasil, a cultura negra brasileira e o negro na formação da sociedade nacional, resgatando a contribuição do povo negro nas áreas social, econômica e política pertinentes à História do Brasil.\n\n§ 2º Os conteúdos referentes à História e Cultura Afro-Brasileira serão ministrados no âmbito de todo o currículo escolar, em especial nas áreas de Educação Artística e de Literatura e História Brasileiras.\n\nBRASIL. Lei n. 10.639/2003. Disponível em: www.gov.br/planalto. Acesso em: 19 maio 2024.\n\nO emprego da norma-padrão é justificado nesse texto", "answer_options": {"A": "pela especialização de seu público-alvo.", "B": "pela relevância cultural de seu conteúdo.", "C": "pelos contextos pedagógicos em que circula.", "D": "pela importância para os grupos étnico-raciais.", "E": "pelas características do gênero a que pertence."}, "images": []}, {"id": "A188B4725930-2025", "question_number": 23, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "TEXTO I\n\nOs trabalhos da exposição Adriana Varejão: suturas, fissuras, ruínas colocam em pauta o exame da história visual, das tradições iconográficas europeias e do fazer artístico ocidental. O corte, a rachadura, o talho e a fissura são elementos de narrativas recorrentes nos trabalhos da artista desde 1992. A produção mais recente incluem pinturas tridimensionais de grande escala das séries Ruínas de charque e Linotipia.\n\nDisponível em: https://pinacoteca.org.br.\nAcesso em: 10 jan. 2025 (adaptado).\n\nTEXTO II\n\nVAREJÃO, A. Azulejaria em carne viva. Óleo sobre tela, poliuretano, madeira e alumínio, 160 × 200 × 25 cm. 1999.\n\nDisponível em: www.adrianavarejao.net. Acesso em: 10 jan. 2025.\n\nA utilização de recursos visuais como suturas, cortes e ruínas por Adriana Varejão, na obra Azulejaria em carne viva, remete à(s)", "answer_options": {"A": "sobreposição da cultura brasileira à arte portuguesa.", "B": "manutenção da representação realista na arte brasileira.", "C": "violências desencadeadas pelo processo colonial brasileiro.", "D": "desigualdades nos incentivos à produção artística brasileira.", "E": "negligência na conservação do patrimônio arquitetônico luso-brasileiro."}, "images": [{"description": "Artwork showing a tiled wall with Portuguese-style azulejo tiles in blue and white patterns. The central area appears to be 'torn open' revealing a reddish, flesh-like interior, creating a dramatic contrast between the decorative colonial tiles and the raw, organic material beneath.", "path": "../../assets/enem_images/2025_d1/q023_fig1.png"}]}, {"id": "FC8E4733412A-2025", "question_number": 15, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "O retrato como gênero da pintura ocidental ficou vinculado às elites, tornando invisíveis as pessoas que não faziam parte do círculo dominante. Num país de tradição escravocrata e colonizado por europeus como o Brasil, pouquíssimas pessoas negras e indígenas foram retratadas em pintura, e menos ainda identificadas com seus nomes nos retratos. Daí a importância, para a história da arte e para a história brasileira, dos retratos de Dalton Paula.\n\nDisponível em: www.masp.org.br. Acesso em: 5 maio 2024 (adaptado).\n\nAo dar protagonismo a Zeferina e a João de Deus Nascimento, o artista Dalton Paula evidencia que a(s)", "answer_options": {"A": "arte pode promover formas de afirmação de identidade social.", "B": "comunidades periféricas passam a adquirir o gênero retrato.", "C": "personagens retratadas simbolizam a sociedade brasileira.", "D": "pintura funciona como instrumento de ascensão social.", "E": "imagens tradicionais preservam memórias afetivas."}, "images": [{"description": "Two portrait paintings side by side. Figure 1 shows 'PAULA, D. Zeferina' - oil on canvas, 59 x 44 cm, Masp, São Paulo, 2018. Figure 2 shows 'PAULA, D. João de Deus Nascimento' - oil on canvas, 59.5 x 44 cm, Masp, São Paulo, 2018. Both are portraits of Black individuals painted in a classical style against green backgrounds.", "path": "../../assets/enem_images/2025_d1/q015_fig1.png"}]}, {"id": "8B59B18C7846-2025", "question_number": 37, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "TEXTO I\n\nOs Doze Trabalhos de Hércules\n\nHércules é uma figura lendária da mitologia greco-romana. Ele é frequentemente retratado como um herói de força sobre-humana e coração, filho de Zeus, o rei dos deuses, e Alcmena, uma mulher mortal. O episódio mais conhecido de Hércules é a realização dos Doze Trabalhos.\n\nEsses trabalhos são impostos a ele como uma forma de expiação pelos crimes cometidos durante um acesso de loucura, causado pela deusa Hera, esposa de Zeus. Os Doze Trabalhos são: matar o Leão de Nemeia; matar a Hidra de Lerna; capturar a corça de Cerineia; capturar o javali de Erimanto; limpar os estábulos de Augias; matar as aves do lago Estínfalo; matar o touro de Creta; capturar os cavalos de Diomedes; roubar o cinturão de Hipólita, a rainha das Amazonas; capturar o gado de Gerião; capturar os pomos de ouro do Jardim das Hespérides; capturar o cão de Hades, Cérbero.\n\nHERTEL, R. Mitologia. Disponível em: https://osmelhoreslivros.com.br.\nAcesso em: 4 jun. 2025 (adaptado).\n\nTEXTO II\n\nOs Doze Trabalhos\n\nO que lhe faltava de estudo lhe sobrava de boa vontade e inteligência. No escritório improvisado na salinha da casa, anunciava seus serviços de bombeiro hidráulico e eletricista. Nas horas vagas entregava panfletos e lavava carros. Quando a cidade fervia com alguma festa, prestava-se a entregar vendendo cerveja. Se fosse algum show infantil, pintava o rosto. Aos sábados, preferia o parque; nos domingos, conservava um jardim de uma mansão, além de tratar da piscina e dos cachorros. Nas férias, abrigava-se na fazenda dos donos da mansão, onde trabalhava como caseiro e motorista. Seu nome: João Antônio da Silva. Mas pode chamar de Hércules.\n\nFERREIRA, G. V. Os doze trabalhos. Disponível em: www.minicontos.com.br.\nAcesso em: 15 jul. 2015 (adaptado).\n\nA comparação entre os textos I e II indica que o(a)", "answer_options": {"A": "intertextualidade com o mito apresentado no Texto I é um recurso presente no Texto II.", "B": "narração de fatos do Texto II sintetiza os acontecimentos retratados no Texto I.", "C": "vocabulário empregado no Texto II é ancorado em conhecimento literário.", "D": "tema do trabalho como reparação é abordado em ambos os textos.", "E": "marcação temporal no passado predomina em ambos os textos."}, "images": []}, {"id": "D0E844C84286-2025", "question_number": 9, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}]}, {"id": "generated-004", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Educação Física", "prompt": "A capoeira, ao longo de sua trajetória histórica no Brasil, passou por diversas ressignificações. Praticada inicialmente por africanos escravizados como forma de resistência, foi criminalizada pelo Código Penal de 1890 e perseguida pelas autoridades policiais durante décadas. A partir da década de 1930, com a criação da capoeira regional por Mestre Bimba, a prática começou a ser aceita socialmente e incorporada a academias e escolas. Em 2014, a Roda de Capoeira foi reconhecida pela UNESCO como Patrimônio Cultural Imaterial da Humanidade, consolidando seu valor como expressão da identidade brasileira.\n\nSILVA, P. C. C. Capoeira e educação física: uma história que dá jogo. Revista Brasileira de Ciências do Esporte, v. 23, n. 1, 2002 (adaptado).\n\nA mudança de status social da capoeira, descrita no texto, evidencia que as práticas corporais", "answer_options": {"A": "mantêm seus significados originais independentemente do contexto histórico em que se inserem.", "B": "são valorizadas culturalmente apenas quando recebem reconhecimento de organismos internacionais.", "C": "têm seus sentidos transformados conforme as relações sociais e políticas de cada época.", "D": "perdem sua função de resistência ao serem incorporadas ao ambiente escolar e esportivo.", "E": "dependem da regulamentação estatal para serem reconhecidas como manifestações culturais legítimas."}, "images": [], "reference_questions": [{"id": "D0E844C84286-2025", "question_number": 9, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}, {"id": "408CB2EC35A1-2025", "question_number": 13, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Art. 26-A. Nos estabelecimentos de ensino fundamental e médio, oficiais e particulares, torna-se obrigatório o ensino sobre História e Cultura Afro-Brasileira.\n\n§ 1º O conteúdo programático a que se refere o caput deste artigo incluirá o estudo da História da África e dos Africanos, a luta dos negros no Brasil, a cultura negra brasileira e o negro na formação da sociedade nacional, resgatando a contribuição do povo negro nas áreas social, econômica e política pertinentes à História do Brasil.\n\n§ 2º Os conteúdos referentes à História e Cultura Afro-Brasileira serão ministrados no âmbito de todo o currículo escolar, em especial nas áreas de Educação Artística e de Literatura e História Brasileiras.\n\nBRASIL. Lei n. 10.639/2003. Disponível em: www.gov.br/planalto. Acesso em: 19 maio 2024.\n\nO emprego da norma-padrão é justificado nesse texto", "answer_options": {"A": "pela especialização de seu público-alvo.", "B": "pela relevância cultural de seu conteúdo.", "C": "pelos contextos pedagógicos em que circula.", "D": "pela importância para os grupos étnico-raciais.", "E": "pelas características do gênero a que pertence."}, "images": []}, {"id": "3A28DBCE4668-2025", "question_number": 24, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse cartaz, a utilização de frases que projetam a vida profissional de duas crianças tem como objetivo\n\nDisponível em: www.unicef.org.br. Acesso em: 15 jan. 2024 (adaptado).", "answer_options": {"A": "sugerir a arrecadação de fundos para o sustento de povos originários no país.", "B": "sensibilizar a sociedade sobre os benefícios decorrentes do combate ao racismo.", "C": "indicar a importância da orientação vocacional na educação de crianças no Brasil.", "D": "chamar a atenção sobre a necessidade de ações voltadas para a educação infantil.", "E": "valorizar o trabalho de agências internacionais na luta contra a discriminação racial."}, "images": [{"description": "Campaign poster showing two children - on the left is Carlos Pataxicord, 36 years old, identified as a doctor with indigenous features wearing traditional headwear, and on the right is Quézia Silva, 29 years old, identified as a lawyer, a young Black woman with braided hair. The poster has text 'EM UM MUNDO DE DIFERENÇAS ENXERGUE A IGUALDADE' and includes UNICEF branding with text about Brazil having 31 million Black and indigenous children facing racial discrimination.", "path": "../../assets/enem_images/2025_d1/q024_fig1.png"}]}, {"id": "AF53E88208E0-2025", "question_number": 6, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "No que diz respeito ao gênero bilhete, a autora dessa crônica", "answer_options": {"A": "ressalta a formalidade na comunicação com as pessoas de sua convivência.", "B": "critica a ansiedade causada pela velocidade da comunicação.", "C": "expressa a obrigatoriedade de concisão nas anotações.", "D": "questiona a prática da escrita de próprio punho.", "E": "apresenta a diversidade de usos no cotidiano."}, "images": []}, {"id": "F134DC422532-2025", "question_number": 14, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "26ª BIENAL INTERNACIONAL DO LIVRO DE SÃO PAULO\nTodo mundo saiu melhor do que entrou.\n02 a 10 de julho\nNovo local: EXPO CENTER NORTE\n\nVocê entra Fernando. E sai Pessoa.\n\nDisponível em: www.publishnews.com.br. Acesso em: 19 set. 2024.\n\nNesse cartaz publicitário, os recursos verbais e não verbais constroem um argumento que objetiva", "answer_options": {"A": "divulgar a obra de Fernando Pessoa no Brasil.", "B": "valorizar a realização de eventos literários no país.", "C": "ressaltar o impacto da leitura na vida das pessoas.", "D": "fomentar o turismo cultural na cidade de São Paulo.", "E": "evidenciar a influência de Pessoa na literatura brasileira."}, "images": [{"description": "Advertisement for the 26th International Book Fair of São Paulo showing a stylized illustration of a man's head in profile wearing glasses. The top of his head is open like a box, with various small figures, books, and city buildings floating above and inside his head, representing knowledge and culture entering his mind. The man has a beard and appears thoughtful.", "path": "../../assets/enem_images/2025_d1/q014_fig1.png"}]}]}, {"id": "generated-005", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Gêneros Textuais", "prompt": "Eu ia andando pela calçada quando vi o cartaz colado no poste: \"Vende-se filhotes de labrador\". Logo abaixo, em letras menores, o número de telefone e um detalhe que me parou: \"Aceita-se parcelamento\". Fiquei ali, parada, tentando entender em que momento da história parcelar um cachorro virou algo razoável. Não era só o cartaz. Era o retrato de um tempo em que tudo se divide — o pagamento, a atenção, o afeto. A gente parcela a casa, o carro, o celular, e agora parcela até a companhia. O filhote chega em dez vezes sem juros, mas o compromisso de cuidar dele é à vista, inteiro, sem desconto.\n\nO problema não é o cartaz. O problema é que a gente lê e acha normal. Normalizamos a lógica do consumo a tal ponto que até o vínculo afetivo cabe numa planilha. Eu não liguei para o número. Fui para casa pensando se ainda existe alguma coisa que a gente aceita receber de uma vez só.\n\nFERREIRA, M. Disponível em: www.revistadacidade.com.br. Acesso em: 14 ago. 2023 (adaptado).\n\nNesse texto, a autora utiliza uma situação cotidiana para construir uma reflexão crítica. Essa estratégia é característica do gênero", "answer_options": {"A": "editorial, pois apresenta a posição institucional de um veículo de comunicação sobre um tema polêmico.", "B": "reportagem, pois investiga um fenômeno social a partir de dados e depoimentos de especialistas.", "C": "crônica, pois parte de um episódio trivial do dia a dia para tecer uma reflexão de alcance mais amplo.", "D": "artigo de opinião, pois desenvolve uma tese com argumentos técnicos voltados à persuasão do leitor.", "E": "conto, pois narra uma história ficcional centrada no conflito entre personagens."}, "images": [], "reference_questions": [{"id": "36F9B8D8902A-2025", "question_number": 8, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse texto, o que caracteriza a escrita \"de próprio punho\" é a letra manuscrita, enquanto a escrita digital é ilustrada pelo(a)", "answer_options": {"A": "utilização de tecnologias diversificadas.", "B": "desenvolvimento de novos recursos de escrita.", "C": "possibilidade de interações mediadas por telas.", "D": "diversidade de fontes tipográficas que estão disponíveis.", "E": "delimitação dos espaços onde a produção textual ocorre."}, "images": []}, {"id": "E88F92A612E3-2025", "question_number": 5, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "¿Qué es la generación Alfa?\n\nHacer cortes generacionales no es una ciencia exacta. Sin embargo, según un análisis de 2018 del centro de estudios Pew Research Center, analizar las generaciones ofrece \"una manera de entender cómo los cambios globales y tecnológicos, económicos y sociales interactúan para definir la forma en que la gente ve el mundo\". Y está claro cómo ve el mundo la próxima generación: a través de una pantalla.\n\n\"Antes las generaciones se definían a partir de sucesos históricos o sociales importantes. Hoy se delimitan por el uso de determinada tecnología\", le explica a BBC Mundo un psicólogo, docente, escritor y experto en el uso — y abuso — de las redes sociales.\n\nNinguna de las generaciones anteriores será comparable a nivel digital con los Alfa, que, como contraparte, serán la primera a la que le serán ajenos muchos aspectos del mundo analógico.\n\nDisponível em: www.bbc.com. Acesso em: 9 maio 2024 (adaptado).\n\nNesse texto, a expressão \"a través de una pantalla\" evidencia que a geração Alfa estabelece com o mundo uma relação marcada pelo(a)", "answer_options": {"A": "conflito etário.", "B": "efemeridade da tecnologia.", "C": "dependência de recursos digitais.", "D": "valor dos acontecimentos sociais.", "E": "indiferença em relação a fatos históricos."}, "images": []}, {"id": "AF53E88208E0-2025", "question_number": 6, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "No que diz respeito ao gênero bilhete, a autora dessa crônica", "answer_options": {"A": "ressalta a formalidade na comunicação com as pessoas de sua convivência.", "B": "critica a ansiedade causada pela velocidade da comunicação.", "C": "expressa a obrigatoriedade de concisão nas anotações.", "D": "questiona a prática da escrita de próprio punho.", "E": "apresenta a diversidade de usos no cotidiano."}, "images": []}, {"id": "D0E844C84286-2025", "question_number": 9, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}, {"id": "345DBF9B2571-2025", "question_number": 4, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "MORGAN, J. Disponível em: www3.gobiernodecanarias.org. Acesso em: 5 maio 2024.\n\nNa charge, a diversidade linguística está representada pelo uso de", "answer_options": {"A": "estruturas verbais com valor de futuro próximo.", "B": "expressões idiomáticas características de uma região.", "C": "advérbios característicos do repertório vocabular dos jovens.", "D": "marcas da oralidade expressas na representação escrita da fala.", "E": "enunciados interrogativos em situação comunicativa com um interlocutor."}, "images": [{"description": "A comic strip showing two characters in conversation. One character asks '¿Qué van a hacer en el cole para el día de la paz...?' The other responds 'Vamo... solta una paloma ahí...' followed by '¿Y luego?' and 'Vosotros... luego vamo... de cachila...' The comic illustrates linguistic diversity through different speech patterns.", "path": "../../assets/enem_images/2025_d1/q004_fig1.png"}]}]}, {"id": "generated-007", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Língua Estrangeira — Inglês", "prompt": "For decades, libraries were seen as quiet, almost sacred places where people went solely to borrow books. Today, however, public libraries across the United States are reinventing themselves as vibrant community hubs. Many now offer free coding workshops, 3D printing labs, language classes, and even mental health counseling. In rural areas, some libraries have become the only place where residents can access high-speed internet. \"We are no longer just about books,\" said one librarian in Vermont. \"We are about bridging gaps — digital, educational, and social.\"\n\nSMITH, R. Disponível em: www.theguardian.com. Acesso em: 12 set. 2023 (adaptado).\n\nDe acordo com o texto, as bibliotecas públicas nos Estados Unidos têm se transformado porque", "answer_options": {"A": "abandonaram o acervo de livros físicos em favor de plataformas digitais.", "B": "ampliaram suas funções para atender a diversas necessidades das comunidades.", "C": "substituíram os bibliotecários por profissionais de tecnologia da informação.", "D": "restringiram o acesso à internet para priorizar atividades educacionais presenciais.", "E": "mantiveram seu papel tradicional de empréstimo de livros com pequenas atualizações."}, "images": [], "reference_questions": [{"id": "36F9B8D8902A-2025", "question_number": 8, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse texto, o que caracteriza a escrita \"de próprio punho\" é a letra manuscrita, enquanto a escrita digital é ilustrada pelo(a)", "answer_options": {"A": "utilização de tecnologias diversificadas.", "B": "desenvolvimento de novos recursos de escrita.", "C": "possibilidade de interações mediadas por telas.", "D": "diversidade de fontes tipográficas que estão disponíveis.", "E": "delimitação dos espaços onde a produção textual ocorre."}, "images": []}, {"id": "8BBEF601900C-2025", "question_number": 7, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "O elemento que caracteriza esse texto como uma crônica é a", "answer_options": {"A": "defesa das opiniões da autora sobre um tema de interesse coletivo.", "B": "exposição sobre o uso de tecnologias nas práticas de escrita atuais.", "C": "abordagem de fatos do contexto pessoal em uma perspectiva reflexiva.", "D": "utilização de recursos linguísticos para a interlocução direta com o leitor.", "E": "apresentação de acontecimentos segundo a ordem de sucessão no tempo."}, "images": []}, {"id": "8F01F682C736-2025", "question_number": 20, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A característica fundamental no aprendizado das práticas rituais nos candomblés é o processo iniciático e participante. Durante o período de reclusão em terreiro ou roça, iniciado passa por uma série de ritos esotéricos (banhos rituais, raspagem da cabeça etc.), ao mesmo tempo em que começa a adquirir um conhecimento codificado de similaridades materiais (substâncias, folhas, frutos, raízes etc.) e de gestos associados a um repertório linguístico específico das cerimônias que se desenrolam nos contextos sagrados em geral e em cada terreiro em particular.\n\nEsse repertório linguístico, genericamente chamado de \"língua de santo\" na Bahia, compreende uma terminologia religiosa operacional, de caráter mágico-semântico e de elaboração forma portuguesa, mas que repousa sobre sistemas lexicais de diferentes línguas africanas que provavelmente foram faladas no Brasil escravocrata, vindo a constituir uma língua ritual, que se acredita pertencer à nação do vodum, do orixá ou do inquice, e não a determinada nação africana política atual.\n\nDisponível em: https://periodicos.ufba.br Acesso em: 21 jan. 2024 (adaptado).\n\nA \"língua de santo\" tem sua importância para o patrimônio linguístico brasileiro por", "answer_options": {"A": "apresentar uma carga semântica mítica.", "B": "conservar elementos dos falares dos escravizados.", "C": "resgatar expressões portuguesas do período colonial.", "D": "decodificar o ritual religioso dos nossos antepassados.", "E": "favorecer a compreensão do léxico africano contemporâneo."}, "images": []}, {"id": "A188B4725930-2025", "question_number": 23, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "TEXTO I\n\nOs trabalhos da exposição Adriana Varejão: suturas, fissuras, ruínas colocam em pauta o exame da história visual, das tradições iconográficas europeias e do fazer artístico ocidental. O corte, a rachadura, o talho e a fissura são elementos de narrativas recorrentes nos trabalhos da artista desde 1992. A produção mais recente incluem pinturas tridimensionais de grande escala das séries Ruínas de charque e Linotipia.\n\nDisponível em: https://pinacoteca.org.br.\nAcesso em: 10 jan. 2025 (adaptado).\n\nTEXTO II\n\nVAREJÃO, A. Azulejaria em carne viva. Óleo sobre tela, poliuretano, madeira e alumínio, 160 × 200 × 25 cm. 1999.\n\nDisponível em: www.adrianavarejao.net. Acesso em: 10 jan. 2025.\n\nA utilização de recursos visuais como suturas, cortes e ruínas por Adriana Varejão, na obra Azulejaria em carne viva, remete à(s)", "answer_options": {"A": "sobreposição da cultura brasileira à arte portuguesa.", "B": "manutenção da representação realista na arte brasileira.", "C": "violências desencadeadas pelo processo colonial brasileiro.", "D": "desigualdades nos incentivos à produção artística brasileira.", "E": "negligência na conservação do patrimônio arquitetônico luso-brasileiro."}, "images": [{"description": "Artwork showing a tiled wall with Portuguese-style azulejo tiles in blue and white patterns. The central area appears to be 'torn open' revealing a reddish, flesh-like interior, creating a dramatic contrast between the decorative colonial tiles and the raw, organic material beneath.", "path": "../../assets/enem_images/2025_d1/q023_fig1.png"}]}, {"id": "345DBF9B2571-2025", "question_number": 4, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "MORGAN, J. Disponível em: www3.gobiernodecanarias.org. Acesso em: 5 maio 2024.\n\nNa charge, a diversidade linguística está representada pelo uso de", "answer_options": {"A": "estruturas verbais com valor de futuro próximo.", "B": "expressões idiomáticas características de uma região.", "C": "advérbios característicos do repertório vocabular dos jovens.", "D": "marcas da oralidade expressas na representação escrita da fala.", "E": "enunciados interrogativos em situação comunicativa com um interlocutor."}, "images": [{"description": "A comic strip showing two characters in conversation. One character asks '¿Qué van a hacer en el cole para el día de la paz...?' The other responds 'Vamo... solta una paloma ahí...' followed by '¿Y luego?' and 'Vosotros... luego vamo... de cachila...' The comic illustrates linguistic diversity through different speech patterns.", "path": "../../assets/enem_images/2025_d1/q004_fig1.png"}]}]}, {"id": "generated-008", "discipline": "Ciencias Humanas e suas Tecnologias", "topic": "Filosofia", "prompt": "O homem esta condenado a ser livre; porque, uma vez lancado ao mundo, e responsavel por tudo o que faz. O existencialista nao crê no poder da paixao. Ele jamais pensara que uma bela paixao e uma torrente devastadora que conduz fatalmente o homem a certos atos e que, por conseguinte, e uma desculpa. Ele pensa que o homem e responsavel por sua paixao.\n\nSARTRE, J.-P. O existencialismo e um humanismo. Petropolis: Vozes, 2014 (adaptado).\n\nNo trecho apresentado, Sartre desenvolve um dos pilares de sua filosofia existencialista. Ao afirmar que o ser humano e \"condenado a ser livre\", o filosofo sustenta que a liberdade humana implica necessariamente a", "answer_options": {"A": "submissao aos impulsos naturais que determinam as escolhas individuais.", "B": "impossibilidade de agir de forma autonoma diante das estruturas sociais.", "C": "responsabilidade integral pelos proprios atos, sem recurso a justificativas externas.", "D": "negacao da existencia de qualquer sentido na experiencia humana.", "E": "aceitacao de uma essencia predeterminada que orienta a conduta moral."}, "images": [], "reference_questions": [{"id": "C6AC7F284DB4-2025", "question_number": 72, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "TEXTO I\n\nEm conjunto: todo e não todo, unido e separado, em consonância e em dissonância. De todos um e de um todos. (Fragmento B10)\n\nTEXTO II\n\nDeus é dia-noite, inverno-verão, guerra-paz, saciedade-fome. (Fragmento B67)\n\nPré-socráticos. São Paulo: Nova Cultural, 1996.\n\nA característica do pensamento do filósofo Heráclito, registrada nos fragmentos mencionados, é a ênfase na", "answer_options": {"A": "qualidade imperceptível do mundo.", "B": "degradação material da natureza.", "C": "imobilidade imanente do universo.", "D": "distribuição dicotômica do cosmos.", "E": "desordem incontornável das coisas."}, "images": []}, {"id": "685F4F811427-2025", "question_number": 87, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Durante a realeza, e nos primeiros anos republicanos, as leis eram transmitidas oralmente de uma geração para outra. A ausência de uma legislação escrita permitia aos patrícios manipular a justiça conforme seus interesses.\n\nCOULANGES, F. A cidade antiga. São Paulo: Martins Fontes, 2000.\n\nA conjuntura sociopolítica da Roma Antiga, conforme apresentada no texto, foi contestada pelos", "answer_options": {"A": "monarcas, que queriam expandir o código jurídico.", "B": "plebeus, que almejavam participar da vida política.", "C": "nobres, que desejavam superar a relação de dependência.", "D": "camponeses, que aspiravam diminuir a jornada de trabalho.", "E": "estrangeiros, que ambicionavam acessar os espaços públicos."}, "images": []}, {"id": "20D96F1C8B9B-2025", "question_number": 62, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Para que a utopia nasça, é preciso duas condições. A primeira é a forte sensação de que o mundo não está funcionando adequadamente e de que seus fundamentos óbvios não são que se reajuste. A segunda condição é a existência de uma confiança no potencial humano à altura da tarefa de reformar o mundo, a crença de que nós, seres humanos, podemos fazê-lo, sendo capazes de perceber o que está errado com o mundo, o que precisa ser modificado, quais são os pontos problemáticos, e ter força e coragem para extirpá-los.\n\nBAUMAN, Z. apud OLIVEIRA, D. Bauman: para que a utopia renasça, é preciso confiar no potencial humano. Revista Cult, jan. 2017.\n\nDe acordo com o autor, qual é a função da utopia no contexto das transformações sociais?", "answer_options": {"A": "Habilitar memórias afetivas.", "B": "Apontar alternativas possíveis.", "C": "Legitimar experiências pretéritas.", "D": "Perpetuar paradigmas científicos.", "E": "Empreender soluções conclusivas."}, "images": []}, {"id": "3A83BD4EFCB1-2025", "question_number": 60, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Adam Smith via o açougueiro e o padeiro não só como indivíduos buscando outros interesses financeiros, mas pessoas moralmente motivadas dentro de uma sociedade. A base da moral era a empatia e o julgamento, instaurando uma distinção entre o que queremos fazer e o que sentimos que devemos fazer.\n\nCOLLIER, P. O futuro do capitalismo. Porto Alegre: LP&M, 2019.\n\nO texto defende uma motivação capitalista para o campo dos negócios, na qual o lucro se mostra associado à", "answer_options": {"A": "consolidação do poder político.", "B": "procura de satisfação subjetiva.", "C": "estruturação do monopólio comercial.", "D": "percepção de responsabilidade ética.", "E": "conquista do reconhecimento público."}, "images": []}, {"id": "E916F3880A26-2025", "question_number": 73, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Entre esses preconceitos estava o canibalismo. A prática não era, porém, uma mentira, uma invenção europeia, mas um ritual controlado por regras. Entre os povos por exemplo, os guerreiros se sentiam honrados quando morriam em um banquete canibal. Para os europeus, no entanto, comer carne humana era abominável, pois nem mesmo os leões ingeriam seus semelhantes. Portanto, para os conquistadores, o canibalismo era sinônimo de barbarismo e da incapacidade de se autogovernar.\n\nRAIMINELLI, U. Canibalismo para alemão ver. In: FIGUEIREDO, L. (Org.). História do Brasil para ocupados. Rio de Janeiro: Casa da Palavra, 2013 (adaptado).\n\nNo texto, europeus e ameríndios atribuíram à prática relatada, respectivamente, o significado de", "answer_options": {"A": "selvageria — empoderamento.", "B": "impetuosidade — resistência.", "C": "fanatismo — humilhação.", "D": "intolerância — violência.", "E": "repressão — justiça."}, "images": []}]}, {"id": "generated-009", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Filosofia", "prompt": "Para Kant, a liberdade consiste na capacidade do sujeito de agir segundo uma lei que ele mesmo se impõe pela razão, independentemente de inclinações sensíveis. Marx, por sua vez, denuncia que essa concepção permanece meramente formal, pois ignora as condições materiais que impedem os indivíduos de exercerem de fato sua autonomia. Já os pensadores da Escola de Frankfurt radicalizam essa crítica ao demonstrar que, nas sociedades administradas, a própria racionalidade instrumental coloniza a subjetividade, de modo que o sujeito já não consegue sequer formular seus interesses autênticos.\n\nNOBRE, M. A teoria crítica. Rio de Janeiro: Zahar, 2004 (adaptado).\n\nA convergência entre a crítica marxiana e a frankfurtiana ao conceito kantiano de liberdade reside na tese de que a autonomia do sujeito é comprometida pela", "answer_options": {"A": "ausência de princípios morais universalizáveis na fundamentação ética.", "B": "determinação heterônoma das condições objetivas e subjetivas da ação.", "C": "insuficiência da experiência empírica para validar juízos sintéticos.", "D": "impossibilidade lógica de conciliar dever moral e interesse particular.", "E": "rejeição filosófica do sujeito transcendental como categoria válida."}, "images": [], "reference_questions": [{"id": "685F4F811427-2025", "question_number": 87, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Durante a realeza, e nos primeiros anos republicanos, as leis eram transmitidas oralmente de uma geração para outra. A ausência de uma legislação escrita permitia aos patrícios manipular a justiça conforme seus interesses.\n\nCOULANGES, F. A cidade antiga. São Paulo: Martins Fontes, 2000.\n\nA conjuntura sociopolítica da Roma Antiga, conforme apresentada no texto, foi contestada pelos", "answer_options": {"A": "monarcas, que queriam expandir o código jurídico.", "B": "plebeus, que almejavam participar da vida política.", "C": "nobres, que desejavam superar a relação de dependência.", "D": "camponeses, que aspiravam diminuir a jornada de trabalho.", "E": "estrangeiros, que ambicionavam acessar os espaços públicos."}, "images": []}, {"id": "3A83BD4EFCB1-2025", "question_number": 60, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Adam Smith via o açougueiro e o padeiro não só como indivíduos buscando outros interesses financeiros, mas pessoas moralmente motivadas dentro de uma sociedade. A base da moral era a empatia e o julgamento, instaurando uma distinção entre o que queremos fazer e o que sentimos que devemos fazer.\n\nCOLLIER, P. O futuro do capitalismo. Porto Alegre: LP&M, 2019.\n\nO texto defende uma motivação capitalista para o campo dos negócios, na qual o lucro se mostra associado à", "answer_options": {"A": "consolidação do poder político.", "B": "procura de satisfação subjetiva.", "C": "estruturação do monopólio comercial.", "D": "percepção de responsabilidade ética.", "E": "conquista do reconhecimento público."}, "images": []}, {"id": "0234A443BC9F-2025", "question_number": 82, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A cidade justa é governada pelos filósofos, administrada pelos cientistas, protegida pelos guerreiros e mantida pelos produtores. Cada classe cumprirá sua função para o bem da pólis, racionalmente dirigida pelos filósofos. Em contrapartida, a cidade injusta é aquela onde o governo está nas mãos dos proprietários — ricos que não pensam no bem comum da pólis e lutarão por interesses econômicos particulares.\n\nCHAUI, M. Convite à filosofia. São Paulo: Ática, 2000.\n\nO texto apresenta a estrutura de governo da cidade ideal pensada por Platão, que postula uma indissociabilidade entre", "answer_options": {"A": "cognoscência e relação intersubjetiva.", "B": "mitologia e teorias cosmogônicas.", "C": "cidadania e primazia da retórica.", "D": "moralidade e virtudes cardeais.", "E": "ética e exercício do poder."}, "images": []}, {"id": "8E5872A94E5A-2025", "question_number": 74, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Fragmentada entre pequenos grupos, fragilizada pela ausência de algum tipo de organização ampla, tendo que carregar o peso do preconceito racial que se transfere do negro para a cultura negra, a religião afro-brasileira em poucas situações deve sair melhor na competição — desigual — com outras religiões. Silenciosamente, assiste-se hoje a um verdadeiro massacre das religiões afro-brasileiras.\n\nPRANDI, R. O Brasil com axé. Estudos Avançados, n. 52, dez. 2004.\n\nNo processo de invisibilização dos cultos afro-brasileiros, o texto associa os seguintes elementos essenciais:", "answer_options": {"A": "Ausência de soluções partidárias e rejeição da laicidade.", "B": "Precariedade de coesão representativa e recusa da alteridade.", "C": "Insuficiência de estruturas decisórias e exclusão da dialogicidade.", "D": "Inexistência de direitos constitucionais e negação do ecumenismo.", "E": "Efemeridde das relações políticas e debilidade do pertencimento étnico."}, "images": []}, {"id": "D210FCA67C11-2025", "question_number": 81, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em decorrência da naturalização da inferioridade social da mulher e da concepção de injustiça Estado, a igualdade abstratamente concebida, torna-se possível convencer o Estado burguês a conceber e implementar políticas públicas cujo escopo seja pela discriminação positiva de mulheres, embora isso aparentemente seja paradoxal.\n\nSAFFIOTI, H.; ALMEIDA, S. S. Violência de gênero: poder e impotência. Rio de Janeiro: Revinter, 1995 (adaptado).\n\nNo contexto atual, qual medida atende ao tipo de política pública abordada no texto?", "answer_options": {"A": "Ampliação do sufrágio universal.", "B": "Diminuição da jornada de trabalho.", "C": "Extinção do crime de feminicídio.", "D": "Redução da licença-maternidade.", "E": "Criação de delegacia especializada."}, "images": []}]}, {"id": "generated-010", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Sociologia", "prompt": "A violência simbólica é essa coerção que se institui por intermédio da adesão que o dominado não pode deixar de conceder ao dominante, quando ele não dispõe, para pensá-la e para se pensar, ou melhor, para pensar sua relação com ele, de outro instrumento senão aquele que partilha com o dominante e que, não sendo mais que a forma incorporada da relação de dominação, fazem essa relação parecer natural.\n\nBOURDIEU, P. Meditações pascalianas. Rio de Janeiro: Bertrand Brasil, 2001 (adaptado).\n\nSegundo a perspectiva sociológica apresentada no texto, a perpetuação das relações de dominação se explica pela", "answer_options": {"A": "imposição de normas jurídicas restritivas pelo aparato estatal.", "B": "interiorização de esquemas de percepção que legitimam a hierarquia.", "C": "resistência consciente dos grupos subalternos às estruturas vigentes.", "D": "concentração dos meios de produção nas mãos de uma elite econômica.", "E": "ausência de instituições educacionais capazes de promover a mobilidade social."}, "images": [], "reference_questions": [{"id": "90B11C868E96-2025", "question_number": 66, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Independência de pensamento, autonomia e direito à opinião política estão sendo perdendo sua função crítica básica numa sociedade que parece cada vez mais capaz de atender às necessidades dos indivíduos através da forma pela qual é organizada. Nas condições de um padrão de vida crescente, a não conformismo com o próprio sistema parece socialmente inútil e principalmente quando acarreta desvantagens econômicas e políticas tangíveis e ameaça o funcionamento suave do todo.\n\nMARCUSE, H. Ideologia da sociedade industrial. Rio de Janeiro: Zahar, 1969.\n\nQual é a característica da sociedade industrial do século XX apresentada no texto?", "answer_options": {"A": "Gestão integrada.", "B": "Relativismo moral.", "C": "Desobediência civil.", "D": "Realidade unidimensional.", "E": "Desenvolvimento tecnológico."}, "images": []}, {"id": "D210FCA67C11-2025", "question_number": 81, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em decorrência da naturalização da inferioridade social da mulher e da concepção de injustiça Estado, a igualdade abstratamente concebida, torna-se possível convencer o Estado burguês a conceber e implementar políticas públicas cujo escopo seja pela discriminação positiva de mulheres, embora isso aparentemente seja paradoxal.\n\nSAFFIOTI, H.; ALMEIDA, S. S. Violência de gênero: poder e impotência. Rio de Janeiro: Revinter, 1995 (adaptado).\n\nNo contexto atual, qual medida atende ao tipo de política pública abordada no texto?", "answer_options": {"A": "Ampliação do sufrágio universal.", "B": "Diminuição da jornada de trabalho.", "C": "Extinção do crime de feminicídio.", "D": "Redução da licença-maternidade.", "E": "Criação de delegacia especializada."}, "images": []}, {"id": "3A83BD4EFCB1-2025", "question_number": 60, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Adam Smith via o açougueiro e o padeiro não só como indivíduos buscando outros interesses financeiros, mas pessoas moralmente motivadas dentro de uma sociedade. A base da moral era a empatia e o julgamento, instaurando uma distinção entre o que queremos fazer e o que sentimos que devemos fazer.\n\nCOLLIER, P. O futuro do capitalismo. Porto Alegre: LP&M, 2019.\n\nO texto defende uma motivação capitalista para o campo dos negócios, na qual o lucro se mostra associado à", "answer_options": {"A": "consolidação do poder político.", "B": "procura de satisfação subjetiva.", "C": "estruturação do monopólio comercial.", "D": "percepção de responsabilidade ética.", "E": "conquista do reconhecimento público."}, "images": []}, {"id": "685F4F811427-2025", "question_number": 87, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Durante a realeza, e nos primeiros anos republicanos, as leis eram transmitidas oralmente de uma geração para outra. A ausência de uma legislação escrita permitia aos patrícios manipular a justiça conforme seus interesses.\n\nCOULANGES, F. A cidade antiga. São Paulo: Martins Fontes, 2000.\n\nA conjuntura sociopolítica da Roma Antiga, conforme apresentada no texto, foi contestada pelos", "answer_options": {"A": "monarcas, que queriam expandir o código jurídico.", "B": "plebeus, que almejavam participar da vida política.", "C": "nobres, que desejavam superar a relação de dependência.", "D": "camponeses, que aspiravam diminuir a jornada de trabalho.", "E": "estrangeiros, que ambicionavam acessar os espaços públicos."}, "images": []}, {"id": "8E5872A94E5A-2025", "question_number": 74, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Fragmentada entre pequenos grupos, fragilizada pela ausência de algum tipo de organização ampla, tendo que carregar o peso do preconceito racial que se transfere do negro para a cultura negra, a religião afro-brasileira em poucas situações deve sair melhor na competição — desigual — com outras religiões. Silenciosamente, assiste-se hoje a um verdadeiro massacre das religiões afro-brasileiras.\n\nPRANDI, R. O Brasil com axé. Estudos Avançados, n. 52, dez. 2004.\n\nNo processo de invisibilização dos cultos afro-brasileiros, o texto associa os seguintes elementos essenciais:", "answer_options": {"A": "Ausência de soluções partidárias e rejeição da laicidade.", "B": "Precariedade de coesão representativa e recusa da alteridade.", "C": "Insuficiência de estruturas decisórias e exclusão da dialogicidade.", "D": "Inexistência de direitos constitucionais e negação do ecumenismo.", "E": "Efemeridde das relações políticas e debilidade do pertencimento étnico."}, "images": []}]}, {"id": "generated-011", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Sociologia", "prompt": "Para Durkheim, nas sociedades industriais modernas, a crescente especialização das funções produtivas gera uma interdependência entre os indivíduos que constitui o principal vínculo de coesão social. Contudo, quando as instituições reguladoras não acompanham o ritmo acelerado das transformações econômicas, esse vínculo se enfraquece, produzindo um estado de desregulamentação moral no qual os indivíduos perdem referências normativas para orientar suas condutas.\n\nORTIZ, R. Durkheim: arquiteto e herói fundador. Revista Brasileira de Ciências Sociais, v. 4, n. 11, 1989 (adaptado).\n\nNa perspectiva sociológica apresentada no texto, a fragilização do tecido social nas sociedades contemporâneas resulta da", "answer_options": {"A": "ausência de solidariedade mecânica, típica de sociedades com baixa divisão do trabalho.", "B": "insuficiência normativa das instituições diante das mudanças promovidas pela divisão do trabalho.", "C": "predominância da ação racional com relação a valores sobre a ação tradicional.", "D": "substituição da dominação racional-legal pela dominação carismática nas burocracias estatais.", "E": "imposição de uma consciência coletiva homogênea incompatível com o individualismo moderno."}, "images": [], "reference_questions": [{"id": "685F4F811427-2025", "question_number": 87, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Durante a realeza, e nos primeiros anos republicanos, as leis eram transmitidas oralmente de uma geração para outra. A ausência de uma legislação escrita permitia aos patrícios manipular a justiça conforme seus interesses.\n\nCOULANGES, F. A cidade antiga. São Paulo: Martins Fontes, 2000.\n\nA conjuntura sociopolítica da Roma Antiga, conforme apresentada no texto, foi contestada pelos", "answer_options": {"A": "monarcas, que queriam expandir o código jurídico.", "B": "plebeus, que almejavam participar da vida política.", "C": "nobres, que desejavam superar a relação de dependência.", "D": "camponeses, que aspiravam diminuir a jornada de trabalho.", "E": "estrangeiros, que ambicionavam acessar os espaços públicos."}, "images": []}, {"id": "D210FCA67C11-2025", "question_number": 81, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em decorrência da naturalização da inferioridade social da mulher e da concepção de injustiça Estado, a igualdade abstratamente concebida, torna-se possível convencer o Estado burguês a conceber e implementar políticas públicas cujo escopo seja pela discriminação positiva de mulheres, embora isso aparentemente seja paradoxal.\n\nSAFFIOTI, H.; ALMEIDA, S. S. Violência de gênero: poder e impotência. Rio de Janeiro: Revinter, 1995 (adaptado).\n\nNo contexto atual, qual medida atende ao tipo de política pública abordada no texto?", "answer_options": {"A": "Ampliação do sufrágio universal.", "B": "Diminuição da jornada de trabalho.", "C": "Extinção do crime de feminicídio.", "D": "Redução da licença-maternidade.", "E": "Criação de delegacia especializada."}, "images": []}, {"id": "7B2C037E9775-2025", "question_number": 61, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "O corpo de cidadãos é o poder supremo dos Estados. A supremacia pode residir ou num homem, ou na minoria, ou em todos. Sempre que o Um, ou a Minoria, ou Todos governam, tendo em vista o bem-estar comum, essas constituições são justas; mas se procuram apenas o benefício de uma das partes, seja ela o Um, a Minoria ou Todos, estabelece-se um desvio.\n\nARISTÓTELES. Política. São Paulo: Nova Cultural, 2000.\n\nNo excerto encontra-se a base da teoria clássica das três formas de governo representadas pela", "answer_options": {"A": "tirania, oligarquia e república.", "B": "burocracia, autarquia e império.", "C": "ditadura, autocracia e anarquia.", "D": "plutocracia, tecnocracia e demagogia.", "E": "monarquia, aristocracia e democracia."}, "images": []}, {"id": "8E5872A94E5A-2025", "question_number": 74, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Fragmentada entre pequenos grupos, fragilizada pela ausência de algum tipo de organização ampla, tendo que carregar o peso do preconceito racial que se transfere do negro para a cultura negra, a religião afro-brasileira em poucas situações deve sair melhor na competição — desigual — com outras religiões. Silenciosamente, assiste-se hoje a um verdadeiro massacre das religiões afro-brasileiras.\n\nPRANDI, R. O Brasil com axé. Estudos Avançados, n. 52, dez. 2004.\n\nNo processo de invisibilização dos cultos afro-brasileiros, o texto associa os seguintes elementos essenciais:", "answer_options": {"A": "Ausência de soluções partidárias e rejeição da laicidade.", "B": "Precariedade de coesão representativa e recusa da alteridade.", "C": "Insuficiência de estruturas decisórias e exclusão da dialogicidade.", "D": "Inexistência de direitos constitucionais e negação do ecumenismo.", "E": "Efemeridde das relações políticas e debilidade do pertencimento étnico."}, "images": []}, {"id": "E916F3880A26-2025", "question_number": 73, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Entre esses preconceitos estava o canibalismo. A prática não era, porém, uma mentira, uma invenção europeia, mas um ritual controlado por regras. Entre os povos por exemplo, os guerreiros se sentiam honrados quando morriam em um banquete canibal. Para os europeus, no entanto, comer carne humana era abominável, pois nem mesmo os leões ingeriam seus semelhantes. Portanto, para os conquistadores, o canibalismo era sinônimo de barbarismo e da incapacidade de se autogovernar.\n\nRAIMINELLI, U. Canibalismo para alemão ver. In: FIGUEIREDO, L. (Org.). História do Brasil para ocupados. Rio de Janeiro: Casa da Palavra, 2013 (adaptado).\n\nNo texto, europeus e ameríndios atribuíram à prática relatada, respectivamente, o significado de", "answer_options": {"A": "selvageria — empoderamento.", "B": "impetuosidade — resistência.", "C": "fanatismo — humilhação.", "D": "intolerância — violência.", "E": "repressão — justiça."}, "images": []}]}, {"id": "generated-012", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Geografia", "prompt": "Vista aérea de uma grande metrópole brasileira.\n\nDisponível em: https://brasilescola.uol.com.br. Acesso em: 15 mar. 2023.\n\nNas grandes cidades brasileiras, a substituição progressiva de áreas verdes por superfícies impermeáveis — como asfalto, concreto e coberturas metálicas — altera significativamente o balanço energético local. Estudos realizados em capitais como São Paulo e Belo Horizonte demonstram que a diferença de temperatura entre o centro urbano e as áreas periféricas com maior cobertura vegetal pode ultrapassar 8 °C nos meses mais secos do ano. Esse fenômeno está diretamente associado à redução da evapotranspiração e ao aumento da absorção de radiação solar pelas superfícies artificiais.\n\nMENDONÇA, F. Clima urbano e ilhas de calor: modelos geoespaciais aplicados à gestão ambiental das cidades. Revista Brasileira de Climatologia, v. 18, n. 1, jan. 2022 (adaptado).\n\nA dinâmica climática urbana descrita no texto tem como principal consequência socioambiental a", "answer_options": {"A": "Diminuição dos índices pluviométricos anuais na região metropolitana.", "B": "Elevação do consumo energético e agravamento do desconforto térmico nas áreas centrais.", "C": "Redução da poluição atmosférica nos bairros de maior adensamento construtivo.", "D": "Estabilização das temperaturas médias em função da verticalização urbana.", "E": "Ampliação das áreas de recarga hídrica nos centros comerciais e financeiros."}, "images": [{"description": "Fotografia aérea de uma grande cidade brasileira mostrando o contraste entre uma área densamente urbanizada, com edifícios de concreto e vias asfaltadas, e um parque urbano com densa cobertura vegetal ao lado.", "path": "questions/question_012_fig1.png"}], "reference_questions": [{"id": "6D0094E85F68-2025", "question_number": 68, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Salvador, capital do estado da Bahia.\n\nDisponível em: https://mundoeducacao.uol.com.br. Acesso em: 20 out. 2023.\n\nA análise dos elementos presentes na fotografia permite identificar qual característica socioespacial?", "answer_options": {"A": "Estagnação da especulação imobiliária.", "B": "Conservação da arquitetura colonial.", "C": "Implantação de moradias populares.", "D": "Predomínio da atividade comercial.", "E": "Processo de verticalização urbana."}, "images": [{"description": "Aerial photograph of Salvador, Bahia showing coastal urban landscape with tall buildings, a lighthouse on a rocky promontory, beaches, and mixed development patterns including both modern buildings and older urban areas", "path": "../../assets/enem_images/2025_d1/q068_fig1.png"}]}, {"id": "50872E1C94C2-2025", "question_number": 54, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A ideia de êxodo urbano assume ares caricaturais. Pega-se a mais reduzida parte da pirâmide social e projeta para todos seus desejos defensivos. Se o êxodo urbano for compreendido como aquisição de uma segunda residência, então não estamos, de fato, falando de êxodo, mas, sim, da inversão de um excedente. Se da renda de pequena fraca da elite para as franjas metropolitanas. Se o êxodo urbano for compreendido como retorno aos municípios menos povoados, então não estamos, de fato, falando de êxodo urbano, mas de um movimento de migração de pessoas cuja estabilidade no emprego e a elevada renda lhes permitem simular, nas ilhas urbanas do interior agropecuário, a vida urbana metropolitana.\n\nARTHUS, T. A. O distópico êxodo urbano. Revista e, n. 11, maio 2021 (adaptado).\n\nA crítica apresentada no texto evidencia uma dinâmica socioespacial marcada pela", "answer_options": {"A": "valorização de tradições rurais.", "B": "redução de plantações agrícolas.", "C": "estagnação de atividades comerciais.", "D": "precariedade de infraestruturas rodoviárias.", "E": "seletividade de deslocamentos populacionais."}, "images": []}, {"id": "8B1FAB3A2605-2025", "question_number": 83, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A Impressão Régia do Rio de Janeiro foi criada pelo decreto de 13 de maio de 1808 para ser confundida a nova sede do império português. A nova tipografia é criada num momento no qual o projeto de reforma do império se transforma num projeto de construção de um novo império português na América. Frente às tensões políticas que essa nova situação criava, a tipografia atuou na legitimação e sustentação daquele projeto político.\n\nBARRA, S. H. S. A Impressão Régia no Rio de Janeiro e a colonização dos sentidos na construção do novo império português na América (1808-1822). Topoi, n. 31, jul.-dez. 2015 (adaptado).\n\nA função política da tecnologia mencionada no texto favoreceu a nova sede do Império português por", "answer_options": {"A": "estabelecer as normativas ideológicas aos periódicos.", "B": "propagar as diretrizes administrativas às capitanias.", "C": "divulgar as conquistas às metrópoles europeias.", "D": "integrar as regiões territoriais ao poder central.", "E": "difundir as publicações às elites lusitanas."}, "images": []}, {"id": "C3896877057B-2025", "question_number": 56, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Por séculos, o Rio Reno tem sido uma rota de navegação confiável, ajudando a criar gigantes fabris ao longo de suas margens. No entanto, esses dias parecem estar no fim, pois o nível da água tem diminuído regularmente, o que impede a navegação fluvial do final do verão até o outono. Isso mostra como a crise climática atinge as economias dos países ricos.\n\nDisponível em: www.estadao.com.br. Acesso em: 10 ago. 2023 (adaptado).\n\nQual é o efeito econômico do problema ambiental apresentado no texto?", "answer_options": {"A": "Supressão da extração de minério.", "B": "Intensificação da atividade de pesca.", "C": "Encarecimento da logística de transporte.", "D": "Inviabilização da agricultura de subsistência.", "E": "Sucateamento da indústria de transformação."}, "images": []}, {"id": "C6511FAE9E64-2025", "question_number": 67, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Do ponto de vista administrativo e judicial, a desapropriação da fazenda Cabaceiras, localizada na região sul do estado do Pará, é a primeira na história movida pelo desrespeito à função social de um imóvel rural, como prevê a Constituição Federal de 1988, em decorrência da exploração do \"trabalho em condições análogas à escravidão\". Na realidade, essa desapropriação não se deu apenas pela ocorrência de relações de trabalho extremamente degradantes, mas também pelas graves infrações ambientais verificadas na fazenda — o que também configura um ataque à função social da terra, de acordo com os preceitos constitucionais.\n\nBARROS, C. I. A conquista da fazenda Cabaceiras. Disponível em: www.agb.org.br. Acesso em: 15 maio 2023.\n\nO texto considera a promoção da justiça como um mecanismo de", "answer_options": {"A": "manutenção da ordem agrária.", "B": "legitimação da propriedade privada.", "C": "hegemonia das classes dominantes.", "D": "revisão das desigualdades econômicas.", "E": "homogeneização da distribuição fundiária."}, "images": []}]}, {"id": "generated-013", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Geografia", "prompt": "A transposição do Rio São Francisco, oficialmente denominada Projeto de Integração do Rio São Francisco com Bacias Hidrográficas do Nordeste Setentrional, é uma megaobra de infraestrutura hídrica que capta água do Velho Chico em dois pontos do estado de Pernambuco. A água é conduzida por canais artificiais ao longo de dois eixos — Norte e Leste — percorrendo mais de 470 km até alcançar rios e açudes nos estados de Pernambuco, Paraíba, Rio Grande do Norte e Ceará. A obra, inaugurada parcialmente em 2017, foi projetada para abastecer cerca de 12 milhões de pessoas em regiões do Semiárido sujeitas a secas recorrentes. Entretanto, críticos apontam que o projeto beneficia sobretudo grandes perímetros irrigados voltados à fruticultura de exportação, enquanto comunidades tradicionais e pequenos agricultores permanecem com acesso limitado à água.\n\nOLIVEIRA, F. R. Recursos hídricos e conflitos no Semiárido brasileiro. Revista Brasileira de Geografia, v. 64, n. 2, 2022 (adaptado).\n\nA contradição apresentada no texto evidencia um processo de", "answer_options": {"A": "democratização do acesso aos recursos naturais no interior do Nordeste.", "B": "concentração dos benefícios hídricos em atividades de maior valor agregado.", "C": "substituição da agricultura familiar pela pecuária extensiva na região.", "D": "esgotamento do potencial hidrológico da bacia do São Francisco.", "E": "redução da dependência energética das usinas hidrelétricas nordestinas."}, "images": [], "reference_questions": [{"id": "0E91D29E9062-2025", "question_number": 86, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Pesquisa pioneira no Brasil propõe o uso de energia do solo para climatizar edifícios\n\nPela primeira vez na história, o Brasil terá um prédio que usa energia do solo para climatizar seus ambientes. Uma pesquisa inovadora avaliou o uso das fundações de edifícios como meio para a troca de energia térmica entre o prédio e o subsolo. A energia geotérmica é aquela encontrada dentro da crosta terrestre, seja no solo, nas rochas ou mesmo na água, sendo identificada pela temperatura. Essa energia pode ser transferida para a superfície por processos naturais ou provocados a partir das fundações da edificação.\n\nDisponível em: https://jornal.usp.br. Acesso em: 7 nov. 2021 (adaptado).\n\nPara o sistema elétrico brasileiro, a expansão de tecnologias como a descrita no texto representa uma tendência de", "answer_options": {"A": "homogeneização da oferta da matriz produtiva.", "B": "ampliação do consumo em unidades residenciais.", "C": "redução da pressão sobre as usinas hidrelétricas.", "D": "estagnação do consumo em unidades industriais.", "E": "superação da necessidade de recursos renováveis."}, "images": []}, {"id": "C3896877057B-2025", "question_number": 56, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Por séculos, o Rio Reno tem sido uma rota de navegação confiável, ajudando a criar gigantes fabris ao longo de suas margens. No entanto, esses dias parecem estar no fim, pois o nível da água tem diminuído regularmente, o que impede a navegação fluvial do final do verão até o outono. Isso mostra como a crise climática atinge as economias dos países ricos.\n\nDisponível em: www.estadao.com.br. Acesso em: 10 ago. 2023 (adaptado).\n\nQual é o efeito econômico do problema ambiental apresentado no texto?", "answer_options": {"A": "Supressão da extração de minério.", "B": "Intensificação da atividade de pesca.", "C": "Encarecimento da logística de transporte.", "D": "Inviabilização da agricultura de subsistência.", "E": "Sucateamento da indústria de transformação."}, "images": []}, {"id": "447CEED7F44B-2025", "question_number": 90, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em 1914, uma expedição estudantil saiu da Rússia em direção à América do Sul, sendo considerada a segunda campanha científica da Rússia no continente depois da longa viagem do barão Georg Heinrich von Langsdorff pelo interior do Brasil na primeira metade do século XIX. O empreendimento foi enviado pelo Museu de Antropologia e Etnografia de São Petersburgo e integrado por cinco jovens cientistas, sendo dois zoólogos, dois botânicos e um antropólogo, cujo objetivo era a coleta de material de valor biológico e etnográfico para compor coleções nas instituições que patrocinaram o seu financiamento. A expedição passou por países como Brasil, Paraguai e Argentina, resultando em amplo material manuscrito e algumas publicações, além dos objetos coletados.\n\nCARNEIRO, L. A. F. A Rússia no Brasil do início do século XX. Rio de Janeiro: Casa de Oswaldo Cruz, 2015 (adaptado).\n\nAlém do significado científico, o evento mencionado conectava-se a um projeto nacionalista de caráter", "answer_options": {"A": "imperialista e colonizador.", "B": "militar e disciplinador.", "C": "lúdico e filantrópico.", "D": "mercantil e predatório.", "E": "religioso e humanitário."}, "images": []}, {"id": "4EA8BCEAF5AF-2025", "question_number": 63, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Produção e exportações brasileiras no ranking mundial em 2019\n\n[Tabela mostrando dados de produção e exportação brasileira]\nAçúcar: Produz 29,5 MI t (2°), Exporta 19,6 MI t (1°), Share 36%\nCafé: Produz 3,8 MI t (1°), Exporta 1,9 MI t (1°), Share 27%\nSuco de laranja: Produz 1,3 MI t (1°), Exporta 1,2 MI t (1°), Share 76%\nSoja: Produz 117 MI t (2°), Exporta 75,4 MI t (1°), Share 51%\nCarne de frango: Produz 13,3 MI t (2°), Exporta 3,6 MI t (1°), Share 38%\nCarne bovina: Produz 9,9 MI t (2°), Exporta 2,0 MI t (1°), Share 22%\nMilho: Produz 101 MI t (3°), Exporta 39,0 MI t (3°), Share 20%\nCarne suína: Produz 3,7 MI t (4°), Exporta 0,7 MI t (6°), Share 10%\n\nFonte: USDA, 2020. Elaboração CNA.\n*Fatia de participação na produção mundial.\n\nDisponível em: www.cnabrasil.org.br. Acesso em: 15 out. 2021.\n\nQual condição favoreceu o cenário produtivo exposto na figura?", "answer_options": {"A": "Redução do poder de compra da população brasileira.", "B": "Ampliação da entrada do capital agroindustrial no campo.", "C": "Diminuição do uso de trabalho especializado na agropecuária.", "D": "Valorização da moeda nacional em relação ao dólar americano.", "E": "Inclusão de pequenas propriedades em cultivos de subsistência."}, "images": [{"description": "Infographic showing Brazilian production and exports ranking in 2019. Contains icons for different agricultural products (sugar, coffee, orange juice, soy, chicken, beef, corn, pork) with their respective production volumes, export volumes, and world market share percentages displayed in colored boxes.", "path": "../../assets/enem_images/2025_d1/q063_fig1.png"}]}, {"id": "1C4852248F48-2025", "question_number": 59, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Pela falta de chuvas, a geração de energia eólica, solar e térmica atingiu níveis recordes em agosto de 2021, quando as hidrelétricas ficaram com cerca de 50% do total. Para um professor da Universidade Federal da Bahia, essa questão não é uma surpresa. \"Não adiante de uma hora para outra a gente olharmos o mapa do Brasil, um dos grandes provedores de água é a Floresta Amazônica. Se você diminuir a floresta, diminui a quantidade de água que vai para a atmosfera\", explica.\n\nBORGES, T. O fantasma do apagão. Disponível em: www.correio24horas.com.br. Acesso em: 9 out. 2021 (adaptado).\n\nDe acordo com o texto, a dificuldade na produção de energia é causada pela alteração da(s)", "answer_options": {"A": "variável em pesquisas meteorológicas.", "B": "paisagem em locais estratégicos.", "C": "demandas em regiões industriais.", "D": "metas em acordos climáticos.", "E": "geologia em áreas naturais."}, "images": []}]}, {"id": "generated-014", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "História", "prompt": "A partir de 1969, o regime militar brasileiro consolidou um aparato repressivo sem precedentes, ao mesmo tempo em que promovia taxas de crescimento econômico superiores a 10% ao ano. A propaganda oficial associava a modernização das infraestruturas — rodovias, hidrelétricas, telecomunicações — à ideia de um \"Brasil Grande\" destinado a ocupar posição de destaque entre as nações. Contudo, os benefícios desse crescimento concentravam-se nos estratos superiores da população, enquanto os salários reais dos trabalhadores sofriam achatamento progressivo. A censura aos meios de comunicação e a perseguição a opositores garantiam que as contradições sociais permanecessem fora do debate público.\n\nNAPOLITANO, M. 1964: história do regime militar brasileiro. São Paulo: Contexto, 2014 (adaptado).\n\nA simultaneidade entre expansão econômica e endurecimento político, descrita no texto, revela uma estratégia do regime que consistia em", "answer_options": {"A": "substituir a legitimidade democrática pelo discurso do progresso material.", "B": "garantir a redistribuição de renda como forma de conter a oposição popular.", "C": "promover a abertura gradual do sistema político por meio de concessões sindicais.", "D": "estimular a participação das massas urbanas nos projetos de desenvolvimento nacional.", "E": "fortalecer as instituições legislativas para assegurar a estabilidade do modelo econômico."}, "images": [], "reference_questions": [{"id": "E916F3880A26-2025", "question_number": 73, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Entre esses preconceitos estava o canibalismo. A prática não era, porém, uma mentira, uma invenção europeia, mas um ritual controlado por regras. Entre os povos por exemplo, os guerreiros se sentiam honrados quando morriam em um banquete canibal. Para os europeus, no entanto, comer carne humana era abominável, pois nem mesmo os leões ingeriam seus semelhantes. Portanto, para os conquistadores, o canibalismo era sinônimo de barbarismo e da incapacidade de se autogovernar.\n\nRAIMINELLI, U. Canibalismo para alemão ver. In: FIGUEIREDO, L. (Org.). História do Brasil para ocupados. Rio de Janeiro: Casa da Palavra, 2013 (adaptado).\n\nNo texto, europeus e ameríndios atribuíram à prática relatada, respectivamente, o significado de", "answer_options": {"A": "selvageria — empoderamento.", "B": "impetuosidade — resistência.", "C": "fanatismo — humilhação.", "D": "intolerância — violência.", "E": "repressão — justiça."}, "images": []}, {"id": "2038420580D7-2025", "question_number": 58, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em 1872, havia mais de 1 milhão de votantes, correspondentes a 13% da população livre masculina. Em 1881, votaram nas eleições parlamentares pouco mais de 100 mil eleitores, ou 0,8% da população total. Houve um corte de quase 90% do eleitorado. O dardo se chocava, sobretudo se lembrarmos que a tendência de todos os países europeus da época era na direção de ampliar os direitos políticos. O mais grave é que esse retrocesso foi duradouro. A Proclamação da República pouco alterou o quadro.\n\nCARVALHO, J. M. Cidadania no Brasil. Rio de Janeiro: Civilização Brasileira, 2002 (adaptado).\n\nDe acordo com o texto, a participação no processo eleitoral brasileiro após a Reforma de 1881 sofreu uma variação que se explica pela", "answer_options": {"A": "restrição de gênero.", "B": "exclusão de imigrantes.", "C": "comprovação de domicílio.", "D": "exigência da alfabetização.", "E": "obrigatoriedade do sufrágio."}, "images": []}, {"id": "8B1FAB3A2605-2025", "question_number": 83, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A Impressão Régia do Rio de Janeiro foi criada pelo decreto de 13 de maio de 1808 para ser confundida a nova sede do império português. A nova tipografia é criada num momento no qual o projeto de reforma do império se transforma num projeto de construção de um novo império português na América. Frente às tensões políticas que essa nova situação criava, a tipografia atuou na legitimação e sustentação daquele projeto político.\n\nBARRA, S. H. S. A Impressão Régia no Rio de Janeiro e a colonização dos sentidos na construção do novo império português na América (1808-1822). Topoi, n. 31, jul.-dez. 2015 (adaptado).\n\nA função política da tecnologia mencionada no texto favoreceu a nova sede do Império português por", "answer_options": {"A": "estabelecer as normativas ideológicas aos periódicos.", "B": "propagar as diretrizes administrativas às capitanias.", "C": "divulgar as conquistas às metrópoles europeias.", "D": "integrar as regiões territoriais ao poder central.", "E": "difundir as publicações às elites lusitanas."}, "images": []}, {"id": "86F4D7FED114-2025", "question_number": 64, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em toda a sua carreira política, Getúlio Vargas sempre contara com o seu talento pessoal de persuasão e poder de manipulação. Agora, porém, seus amigos começavam a perceber que ele parecia envelhecido e cansado. A principal figura da oposição, concordavam eles, era o belicoso jornalista Carlos Lacerda. Se ao menos pudessem \"removê-lo\" do cenário político, talvez Vargas se salvasse da situação. Esses seguidores decidiram tomar o assunto em suas próprias mãos com o atentado da Rua Tonelero.\n\nSKIDMORE, T. Brasil: de Getúlio a Castelo. Rio de Janeiro: Paz e Terra, 2003 (adaptado).\n\nNesse contexto, a ação dos aliados de Getúlio Vargas teve como consequência imediata o(a)", "answer_options": {"A": "intensificação dos ataques do grupo udenista.", "B": "intervenção dos sindicatos no conflito partidário.", "C": "mobilização da sociedade na defesa do governo.", "D": "abandono da censura aos meios de comunicação.", "E": "apoio dos parlamentares aos candidatos oposicionistas."}, "images": []}, {"id": "1E3364A41EA3-2025", "question_number": 71, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Moradores de Berlim protestaram contra a demolição de um trecho do muro que dividiu a cidade durante quase três décadas. Tratado como patrimônio cultural histórico da cidade, o East Side Gallery, repleto de grafites emblemáticos, está na mira de uma construção que pretende levantar um condomínio de luxo às margens do Rio Spree, que corta a cidade.\n\nALMEIDA, R. Alemães impedem demolição de último trecho original do muro de Berlim. Disponível em: http://operamundi.uol.com.br. Acesso em: 2 fev. 2021 (adaptado).\n\nA demolição do símbolo histórico mencionado representa uma", "answer_options": {"A": "violação da memória coletiva.", "B": "alteração das fronteiras políticas.", "C": "adesão à arquitetura neoclássica.", "D": "negação das influências orientais.", "E": "reorganização da mobilidade urbana."}, "images": []}]}, {"id": "generated-015", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "História", "prompt": "O projeto iluminista não se limitava a uma reforma do conhecimento: era, na verdade, uma reforma da sociedade inteira. Os filósofos não pretendiam apenas compreender o mundo, mas transformá-lo segundo os princípios da razão. Contudo, essa transformação encontrava um paradoxo fundamental: para que as reformas racionais fossem implementadas, era necessário o apoio de monarcas que, por definição, governavam com base em princípios de autoridade hereditária e direito divino — exatamente os fundamentos que o pensamento ilustrado punha em questão.\n\nVENTURI, F. Utopia e reforma no Iluminismo. Bauru: EDUSC, 2003 (adaptado).\n\nO paradoxo descrito no texto revela que o movimento ilustrado do século XVIII", "answer_options": {"A": "rejeitou integralmente o modelo monárquico ao propor a soberania popular como único fundamento legítimo do poder.", "B": "estabeleceu alianças táticas com o poder absolutista para viabilizar mudanças que, em última instância, questionavam suas bases de legitimidade.", "C": "restringiu suas propostas ao campo científico, evitando confrontos diretos com as estruturas políticas vigentes.", "D": "defendeu a manutenção dos privilégios aristocráticos como condição para a estabilidade das reformas pretendidas.", "E": "subordinou o exercício da razão crítica à aprovação das instituições religiosas dominantes na Europa."}, "images": [], "reference_questions": [{"id": "E916F3880A26-2025", "question_number": 73, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Entre esses preconceitos estava o canibalismo. A prática não era, porém, uma mentira, uma invenção europeia, mas um ritual controlado por regras. Entre os povos por exemplo, os guerreiros se sentiam honrados quando morriam em um banquete canibal. Para os europeus, no entanto, comer carne humana era abominável, pois nem mesmo os leões ingeriam seus semelhantes. Portanto, para os conquistadores, o canibalismo era sinônimo de barbarismo e da incapacidade de se autogovernar.\n\nRAIMINELLI, U. Canibalismo para alemão ver. In: FIGUEIREDO, L. (Org.). História do Brasil para ocupados. Rio de Janeiro: Casa da Palavra, 2013 (adaptado).\n\nNo texto, europeus e ameríndios atribuíram à prática relatada, respectivamente, o significado de", "answer_options": {"A": "selvageria — empoderamento.", "B": "impetuosidade — resistência.", "C": "fanatismo — humilhação.", "D": "intolerância — violência.", "E": "repressão — justiça."}, "images": []}, {"id": "90B11C868E96-2025", "question_number": 66, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Independência de pensamento, autonomia e direito à opinião política estão sendo perdendo sua função crítica básica numa sociedade que parece cada vez mais capaz de atender às necessidades dos indivíduos através da forma pela qual é organizada. Nas condições de um padrão de vida crescente, a não conformismo com o próprio sistema parece socialmente inútil e principalmente quando acarreta desvantagens econômicas e políticas tangíveis e ameaça o funcionamento suave do todo.\n\nMARCUSE, H. Ideologia da sociedade industrial. Rio de Janeiro: Zahar, 1969.\n\nQual é a característica da sociedade industrial do século XX apresentada no texto?", "answer_options": {"A": "Gestão integrada.", "B": "Relativismo moral.", "C": "Desobediência civil.", "D": "Realidade unidimensional.", "E": "Desenvolvimento tecnológico."}, "images": []}, {"id": "1E3364A41EA3-2025", "question_number": 71, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Moradores de Berlim protestaram contra a demolição de um trecho do muro que dividiu a cidade durante quase três décadas. Tratado como patrimônio cultural histórico da cidade, o East Side Gallery, repleto de grafites emblemáticos, está na mira de uma construção que pretende levantar um condomínio de luxo às margens do Rio Spree, que corta a cidade.\n\nALMEIDA, R. Alemães impedem demolição de último trecho original do muro de Berlim. Disponível em: http://operamundi.uol.com.br. Acesso em: 2 fev. 2021 (adaptado).\n\nA demolição do símbolo histórico mencionado representa uma", "answer_options": {"A": "violação da memória coletiva.", "B": "alteração das fronteiras políticas.", "C": "adesão à arquitetura neoclássica.", "D": "negação das influências orientais.", "E": "reorganização da mobilidade urbana."}, "images": []}, {"id": "2FDF11E0CDBD-2025", "question_number": 76, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Os direitos do homem constituem uma classe variável, como a história destes últimos séculos demonstra suficientemente. O elenco dos direitos do homem se modificou, é continua a se modificar, com a mudança das condições históricas, ou seja, dos carecimentos e dos interesses, das classes no poder, dos meios disponíveis para a realização dos mesmos, das transformações técnicas. Direitos que foram declarados absolutos no final do século XVIII foram submetidos a limitações nas declarações contemporâneas; direitos que as declarações do século XVIII nem sequer mencionavam, como os direitos sociais, são agora proclamados com grande ostentação nas recentes declarações.\n\nBOBBIO, N. A era dos direitos. Rio de Janeiro: Elsevier, 2004.\n\nOs argumentos apresentados no texto sustentam que os direitos humanos são variáveis porque os considera como", "answer_options": {"A": "fenômenos espontâneos.", "B": "conquistas atemporais.", "C": "convenções coletivas.", "D": "resquícios religiosos.", "E": "imposições políticas."}, "images": []}, {"id": "2CFC62945F0B-2025", "question_number": 49, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "De acordo com o texto, ainda que estejam em desconformidade com o ordenamento jurídico, são exemplos de ação justa:", "answer_options": {"A": "Casos de desobediência civil.", "B": "Repressões do aparato estatal.", "C": "Conflitos de natureza intercontinental.", "D": "Manifestações do movimento sindical.", "E": "Mobilizações de agremiações estudantis."}, "images": [{"description": "A historical painting by Carlevaris L. titled 'La piazzetta' (detail), showing a Venetian square with classical architecture, columns, and various people in period clothing. Oil on canvas, 49 × 41 cm, from the Ashmolean Museum, Oxford, 1729.", "path": "../../assets/enem_images/2025_d1/q049_fig1.png"}]}]}, {"id": "generated-016", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": "Biologia", "prompt": "Em uma região agrícola do sul do Brasil, o uso intensivo de agrotóxicos organoclorados nas lavouras de soja resultou na contaminação de um rio próximo por escoamento superficial. Uma equipe de pesquisadores analisou a concentração desses compostos nos tecidos de organismos da cadeia alimentar aquática local e obteve os seguintes valores médios: algas (0,04 ppm), microcrustáceos (0,5 ppm), peixes de pequeno porte (2,0 ppm), peixes predadores (25 ppm) e garças que se alimentam desses peixes (150 ppm). Os organoclorados são substâncias de alta estabilidade química e baixa taxa de excreção pelos organismos.\n\nOLIVEIRA, F. S.; MENDES, T. R. Contaminantes persistentes em ecossistemas aquáticos continentais. Ciência Hoje, v. 56, n. 3, 2023 (adaptado).\n\nCom base nos dados apresentados, caso uma doença eliminasse completamente a população de peixes predadores desse ecossistema, a consequência esperada para a concentração de organoclorados nas garças, em longo prazo, seria", "answer_options": {"A": "um aumento, pois as garças passariam a se alimentar diretamente das algas, que são a fonte primária do contaminante.", "B": "uma redução, pois as garças passariam a consumir peixes de pequeno porte, que apresentam menor concentração do contaminante.", "C": "a manutenção dos mesmos níveis, pois a quantidade total de agrotóxico no ecossistema permaneceria inalterada.", "D": "um aumento, pois os microcrustáceos se multiplicariam sem controle e acumulariam mais agrotóxicos.", "E": "uma redução, pois a ausência dos peixes predadores diminuiria o escoamento de agrotóxicos da lavoura para o rio."}, "images": [], "reference_questions": [{"id": "B81C05439701-2025", "question_number": 94, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "O bioma Cerrado é caracterizado por apresentar ampla e natural diversidade de espécies vegetais. Nos últimos tempos, o homem vem modificando esse cenário pela inserção de plantas exóticas nesse ambiente. Exemplo disso é o cultivo de capim-gordura, nativo do continente africano e utilizado nesse tipo de ecossistema como forma de pastagem. É importante ressaltar que essa espécie vegetal é capaz de se espalhar em grandes áreas, devido à sua agressividade e poder competitivo.\n\nCARLOS JR., L. A.; BARBOSA, N. P. U.; FERNANDES, G. W.\nO capim-gordura e as invasões no Cerrado brasileiro.\nJornal do Biólogo, mar.-jun. 2008 (adaptado).\n\nEm longo prazo, essa ação do homem pode gerar qual consequência?", "answer_options": {"A": "Diversificar nichos ecológicos.", "B": "Assorear as nascentes do bioma.", "C": "Dificultar a infiltração de água na terra.", "D": "Diminuir as espécies nativas do bioma.", "E": "Contribuir com a redução das queimadas."}, "images": []}, {"id": "EC4AB1C849EF-2025", "question_number": 134, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Os funcionários de um zoológico observaram um aumento na taxa de mortalidade de aves aquáticas por afogamento. Um grupo de biólogos analisou o comportamento das aves por várias semanas e observou que elas apresentavam dificuldade de flutuação, pois causa do encharcamento das penas com água.\n\nO aumento na taxa de mortalidade dessas aves estava associado a uma redução na", "answer_options": {"A": "dilatação do papo.", "B": "reposição de penas das asas.", "C": "secreção da glândula uropigial.", "D": "formação da membrana natatória.", "E": "largura das cavidades de ossos pneumáticos."}, "images": []}, {"id": "012FE7AC6A91-2025", "question_number": 95, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "O monstro de gila, um lagarto encontrado em um deserto dos Estados Unidos, apresenta adaptações à falta de alimento nesse ambiente. Esse lagarto possui um hormônio que controla os níveis de açúcar em seu próprio sangue. Foi observado que esse hormônio também controla os níveis de açúcar no sangue de pessoas diabéticas.\n\nRUSSELL, C. Ozempic e outros remédios inspirados em veneno de animais. Disponível em: www.bbc.com. Acesso em: 6 dez. 2024 (adaptado).\n\nConsiderando que animais de um mesmo grupo taxonômico podem apresentar características adaptativas semelhantes em ambientes similares, onde seria mais provável encontrar lagartos com essas características no território brasileiro?", "answer_options": {"A": "Cerrado.", "B": "Pampas.", "C": "Caatinga.", "D": "Restinga.", "E": "Pantanal."}, "images": []}, {"id": "AF901C5A6FF8-2025", "question_number": 111, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "O esquema apresenta as etapas do processo de biodigestão, uma forma de dar um destino sustentável a excrementos animais e restos de comida produzidos em áreas de criação de gado e porcos confinados.\n\nDisponível em: www.engquimicasantossp.com.br. Acesso em: 11 fev. 2015 (adaptado).\n\nDar destino sustentável às sobras, conforme apresentado na etapa 4, ajuda a evitar a", "answer_options": {"A": "bioacumulação de toxinas em plantas.", "B": "eutrofização dos corpos de água.", "C": "destruição da camada de ozônio.", "D": "ocorrência de inversão térmica.", "E": "produção de chuva ácida."}, "images": [{"description": "Diagram showing a biodigestion process with 4 numbered steps: 1) Animal waste and food scraps mixed with water in the biodigester, 2) Inside the biodigester, bacteria decompose residues transforming them into methane gas and fertilizer, 3) Methane gas can be channeled to power a generator or heater, 4) The leftovers serve as fertilizer. Shows a cow and a cylindrical biodigester system.", "path": "../../assets/enem_images/2025_d2/q111_fig1.png"}]}, {"id": "A31A95718E3C-2025", "question_number": 96, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Existe um processo de purificação de água em que são removidos os sais dissolvidos. A água que passa por esse processo é muito usada em laboratórios de química, em indústrias (como solvente), em baterias de carros etc. Entretanto, esse tipo de água não é adequado para ingestão, pois pode causar problemas de saúde, como carência iônica e diarreia.\n\nEssa água é chamada de", "answer_options": {"A": "dura.", "B": "pesada.", "C": "sanitária.", "D": "destilada.", "E": "oxigenada."}, "images": []}]}, {"id": "generated-017", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": "Biologia", "prompt": "A anemia falciforme é uma doença genética autossômica recessiva causada por uma mutação no gene que codifica a cadeia beta da hemoglobina. Indivíduos homozigotos (HbS HbS) apresentam hemácias em formato de foice e sofrem crises graves de anemia. Indivíduos heterozigotos (HbA HbS), chamados portadores do traço falciforme, produzem tanto hemoglobina normal quanto alterada e geralmente são assintomáticos. Pesquisadores observaram que, em regiões da África subsaariana onde a malária é endêmica, a frequência de indivíduos heterozigotos é significativamente maior do que o esperado. Estudos demonstraram que as hemácias dos heterozigotos, ao serem infectadas pelo Plasmodium falciparum, sofrem falcização precoce e são rapidamente eliminadas pelo baço, reduzindo a carga parasitária.\n\nOLIVEIRA, F. T. et al. Vantagem seletiva do heterozigoto e a manutenção do alelo da hemoglobina S em populações humanas. Revista Brasileira de Genética Médica, n. 3, jun. 2019 (adaptado).\n\nA manutenção de uma frequência elevada do alelo HbS nessas populações é explicada pelo fato de que", "answer_options": {"A": "os indivíduos homozigotos HbA HbA são imunes à infecção pelo Plasmodium falciparum.", "B": "os heterozigotos apresentam maior aptidão biológica em ambientes com alta incidência de malária.", "C": "a mutação que origina o alelo HbS é induzida pela presença do parasita causador da malária.", "D": "os indivíduos homozigotos HbS HbS possuem resistência completa à malária e à anemia falciforme.", "E": "o alelo HbS é dominante sobre o alelo HbA, garantindo proteção contra a malária em todos os portadores."}, "images": [], "reference_questions": [{"id": "C998B0E6D0FD-2025", "question_number": 102, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "A figura apresenta a herança genética de uma característica a partir do cruzamento de insetos de uma mesma espécie.\n\nQual alternativa representa a proporção fenotípica da prole resultante do cruzamento entre indivíduos da primeira geração?", "answer_options": {"A": "Machos e Fêmeas (all with dots)", "B": "Machos e Fêmeas (all with stripes)", "C": "Machos e Fêmeas (all with dots)", "D": "Machos e Fêmeas (mix of dots and stripes)", "E": "Machos e Fêmeas (mix of dots and stripes)"}, "images": [{"description": "Genetic inheritance diagram showing: Parents (Parentais) - Male (Macho) with red body and black dots crossed with Female (Fêmea) with red body and black stripe. First generation (Primeira geração) shows two offspring: Male (Macho) with red body and black dots, and Female (Fêmea) with red body and black dots. Below are five answer options (A-E) showing different combinations of males and females with various phenotypes - some with dots, some with stripes.", "path": "../../assets/enem_images/2025_d2/q102_fig1.png"}]}, {"id": "E18D3AFD16A6-2025", "question_number": 133, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "A maioria dos seres vivos tem um relógio biológico (ciclo circadiano), que regula as mudanças metabólicas e comportamentais de acordo com o ciclo de 24 horas de rotação da Terra. Em 2017, um artigo publicado na revista Science Advantage mostrou ser possível a transferência dos genes do relógio circadiano da cianobactéria Synechococcus elongatus para o genoma da bactéria Escherichia coli, um organismo não circadiano.\n\nCHEN, A. H. et al. Transplantability of a Circadian Lock to Noncircardian Organism. Science Advantage, n. 1, 2015 (adaptado).\n\nEstarão presentes no organismo geneticamente modificado os genes do", "answer_options": {"A": "metabolismo de E. coli, apenas.", "B": "ciclo circadiano de E. coli, apenas.", "C": "metabolismo de S. elongatus e do ciclo circadiano de E. coli.", "D": "ciclo circadiano de S. elongatus e do metabolismo de E. coli.", "E": "ciclo circadiano de S. elongatus e do ciclo circadiano de E. coli."}, "images": []}, {"id": "EC4AB1C849EF-2025", "question_number": 134, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Os funcionários de um zoológico observaram um aumento na taxa de mortalidade de aves aquáticas por afogamento. Um grupo de biólogos analisou o comportamento das aves por várias semanas e observou que elas apresentavam dificuldade de flutuação, pois causa do encharcamento das penas com água.\n\nO aumento na taxa de mortalidade dessas aves estava associado a uma redução na", "answer_options": {"A": "dilatação do papo.", "B": "reposição de penas das asas.", "C": "secreção da glândula uropigial.", "D": "formação da membrana natatória.", "E": "largura das cavidades de ossos pneumáticos."}, "images": []}, {"id": "ACBDED464C29-2025", "question_number": 121, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Plantas e algas realizam fotossíntese oxigênica para síntese de matéria orgânica e, para isso, utilizam trifosfato de adenosina (ATP) e nicotinamida adenina dinucleotídeo fosfato reduzido (NADPH). Já algumas bactérias fotossintetizantes não apresentam cloroplasto e clorofila, mas um pigmento denominado bacterioclorofila. Esses procariotos realizam a fotossíntese anoxigênica, um processo de síntese de matéria orgânica utilizando o gás carbônico (CO₂) e o gás sulfídrico (H₂S).\n\nNa fotossíntese oxigênica, qual composto desempenha função análoga à do H₂S?", "answer_options": {"A": "ATP.", "B": "NADPH.", "C": "Oxigênio.", "D": "Clorofila.", "E": "Água."}, "images": []}, {"id": "38C115F10CA4-2025", "question_number": 106, "discipline": "Ciências da Natureza e suas Tecnologias", "topic": null, "prompt": "Em uma aula prática de química orgânica, um professor identificou os frascos de várias substâncias apenas por suas fórmulas moleculares. Em seguida, apresentou a representação tridimensional da molécula do borneol, um álcool secundário, conforme a figura. Ele explicou que, quando oxidado, o borneol dá origem à cânfora, uma cetona usada desde a Antiguidade como incenso e no preparo de medicamentos. Finalmente, o professor solicitou que os alunos identificassem o frasco contendo a substância cânfora.\n\nSANTOS, A. P. B. et al. Oxidação do borneol à cânfora com água sanitária: um experimento simples de baixo custo e limpo. Química Nova, n. 6, 2009 (adaptado).\n\nO frasco contendo cânfora apresenta a fórmula molecular:", "answer_options": {"A": "C₈H₁₆O", "B": "C₉H₁₆O", "C": "C₁₀H₁₆O", "D": "C₁₀H₁₈O₂", "E": "C₁₀H₂₀O₂"}, "images": [{"description": "3D molecular structure diagram of borneol showing carbon atoms, hydrogen atoms, and an OH group. The structure shows a bicyclic molecule with methyl groups.", "path": "../../assets/enem_images/2025_d2/q106_fig1.png"}]}]}];
+
+    // ============================================================
+    // APP STATE
+    // ============================================================
+    let userName = '';
+    let questions = [];
+    let currentIdx = 0;
+    let results = [];
+    let carouselIdx = 0;
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    const totalQ = REAL_QUESTIONS.length + AI_QUESTIONS.length;
+    document.getElementById('qCountInfo').textContent =
+        `${totalQ} questions total (shuffled randomly)`;
+
+    const nameInput = document.getElementById('nameInput');
+    const startBtn = document.getElementById('startBtn');
+
+    nameInput.addEventListener('input', () => {
+        startBtn.disabled = !nameInput.value.trim();
+    });
+
+    startBtn.addEventListener('click', () => {
+        userName = nameInput.value.trim();
+        buildQuestionSet();
+        document.getElementById('startPage').style.display = 'none';
+        document.getElementById('evalPage').style.display = 'block';
+        renderQuestion();
+    });
+
+    function buildQuestionSet() {
+        const real = REAL_QUESTIONS.map(q => ({ ...q, _source: 'real' }));
+        const ai = AI_QUESTIONS.map(q => ({ ...q, _source: 'ai' }));
+        questions = [...real, ...ai];
+        shuffle(questions);
+    }
+
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+    }
+
+    // ============================================================
+    // RENDER QUESTION
+    // ============================================================
+    function renderQuestion() {
+        const q = questions[currentIdx];
+
+        document.getElementById('qNumber').textContent = `Question ${currentIdx + 1} of ${questions.length}`;
+        document.getElementById('qDiscipline').textContent = q.discipline + (q.topic ? ` — ${q.topic}` : '');
+        document.getElementById('qPrompt').textContent = q.prompt;
+
+        // Render images
+        const imgContainer = document.getElementById('qImages');
+        imgContainer.innerHTML = '';
+        if (q.images && q.images.length > 0) {
+            imgContainer.style.display = '';
+            q.images.forEach(img => {
+                const wrapper = document.createElement('div');
+                const imgEl = document.createElement('img');
+                imgEl.src = img.path;
+                imgEl.alt = img.description || 'Question image';
+                wrapper.appendChild(imgEl);
+                if (img.description) {
+                    const desc = document.createElement('div');
+                    desc.className = 'img-desc';
+                    desc.textContent = img.description;
+                    wrapper.appendChild(desc);
+                }
+                imgContainer.appendChild(wrapper);
+            });
+        } else {
+            imgContainer.style.display = 'none';
+        }
+
+        // Render options
+        const optList = document.getElementById('qOptions');
+        optList.innerHTML = '';
+        if (q.answer_options) {
+            const letters = Object.keys(q.answer_options).sort();
+            letters.forEach(letter => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${letter})</strong> ${escapeHtml(q.answer_options[letter])}`;
+                optList.appendChild(li);
+            });
+        }
+
+        // Hide feedback, reveal panel, next buttons
+        document.getElementById('feedbackBanner').style.display = 'none';
+        document.getElementById('revealPanel').style.display = 'none';
+        document.getElementById('nextBtnSimple').style.display = 'none';
+
+        // Check if this question was already answered
+        const existingResult = results.find(r => r.questionId === q.id);
+
+        // Reset eval form
+        currentChoice = null;
+        currentConfidence = null;
+        document.querySelectorAll('.choice-btn').forEach(b => {
+            b.classList.remove('selected');
+            b.style.pointerEvents = '';
+        });
+        document.querySelectorAll('.conf-btn').forEach(b => {
+            b.classList.remove('active');
+            b.style.pointerEvents = '';
+        });
+        document.getElementById('reasoningInput').value = '';
+        document.getElementById('reasoningInput').disabled = false;
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('evalPanelForm').style.display = '';
+
+        // Restore previous answer if going back
+        if (existingResult) {
+            currentChoice = existingResult.choice;
+            currentConfidence = existingResult.confidence;
+            if (currentChoice === 'real') {
+                document.getElementById('btnReal').classList.add('selected');
+            } else {
+                document.getElementById('btnAI').classList.add('selected');
+            }
+            document.querySelectorAll('.conf-btn').forEach(b => {
+                if (parseInt(b.dataset.value) === currentConfidence) b.classList.add('active');
+            });
+            document.getElementById('reasoningInput').value = existingResult.reasoning || '';
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').textContent = 'Update';
+        } else {
+            document.getElementById('submitBtn').textContent = 'Submit';
+        }
+
+        // Show/hide back button
+        document.getElementById('backBtn').disabled = (currentIdx === 0);
+
+        // Progress
+        document.getElementById('progressText').textContent = `${currentIdx + 1} / ${questions.length}`;
+        document.getElementById('progressBar').style.width = `${((currentIdx) / questions.length) * 100}%`;
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+    }
+
+    function escapeHtml(text) {
+        if (text == null) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // ============================================================
+    // CHOICE BUTTONS
+    // ============================================================
+    let currentChoice = null;
+    let currentConfidence = null;
+
+    document.getElementById('btnReal').addEventListener('click', () => {
+        currentChoice = 'real';
+        document.getElementById('btnReal').classList.add('selected');
+        document.getElementById('btnAI').classList.remove('selected');
+        checkSubmitReady();
+    });
+
+    document.getElementById('btnAI').addEventListener('click', () => {
+        currentChoice = 'ai';
+        document.getElementById('btnAI').classList.add('selected');
+        document.getElementById('btnReal').classList.remove('selected');
+        checkSubmitReady();
+    });
+
+    document.querySelectorAll('.conf-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentConfidence = parseInt(btn.dataset.value);
+            document.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            checkSubmitReady();
+        });
+    });
+
+    function checkSubmitReady() {
+        document.getElementById('submitBtn').disabled = !(currentChoice && currentConfidence);
+    }
+
+    // ============================================================
+    // SUBMIT — show immediate feedback
+    // ============================================================
+    document.getElementById('submitBtn').addEventListener('click', () => {
+        const q = questions[currentIdx];
+        const isCorrect = currentChoice === q._source;
+
+        const resultData = {
+            questionId: q.id,
+            discipline: q.discipline,
+            topic: q.topic || '',
+            truth: q._source,
+            choice: currentChoice,
+            reasoning: document.getElementById('reasoningInput').value.trim(),
+            confidence: currentConfidence,
+            correct: isCorrect
+        };
+
+        // Update existing result or push new one
+        const existingIdx = results.findIndex(r => r.questionId === q.id);
+        if (existingIdx >= 0) {
+            results[existingIdx] = resultData;
+        } else {
+            results.push(resultData);
+        }
+
+        // Update progress bar
+        const answeredCount = new Set(results.map(r => r.questionId)).size;
+        document.getElementById('progressBar').style.width = `${(answeredCount / questions.length) * 100}%`;
+
+        // Hide the eval form
+        document.getElementById('evalPanelForm').style.display = 'none';
+
+        // Show feedback banner
+        const banner = document.getElementById('feedbackBanner');
+        const truthLabel = q._source === 'real' ? 'an original ENEM question' : 'an AI-generated question';
+
+        const correctMessages = [
+            'Nailed it!', 'Sharp eye!', 'Spot on!', 'You got it!',
+            'Bingo!', 'Nice catch!', 'Eagle eye!', 'Well played!'
+        ];
+        const wrongMessages = [
+            'Fooled you!', 'Tricky, right?', 'Plot twist!', 'Gotcha!',
+            'Surprise!', 'Not quite!', 'Close, but no!', 'The AI says hi!'
+        ];
+        const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+        if (isCorrect) {
+            banner.className = 'feedback-banner correct';
+            document.getElementById('feedbackText').textContent = pick(correctMessages);
+        } else {
+            banner.className = 'feedback-banner wrong';
+            document.getElementById('feedbackText').textContent = pick(wrongMessages);
+        }
+        document.getElementById('feedbackDetail').textContent = `This was ${truthLabel}`;
+        banner.style.display = 'block';
+
+        // If AI with references, show carousel
+        if (q._source === 'ai' && q.reference_questions && q.reference_questions.length > 0) {
+            showReferenceCarousel(q);
+        } else {
+            // For real questions or AI without refs, show simple next button
+            document.getElementById('nextBtnSimple').style.display = 'block';
+            window.scrollTo({ top: banner.offsetTop - 20, behavior: 'smooth' });
+        }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+        if (currentIdx > 0) {
+            currentIdx--;
+            renderQuestion();
+        }
+    });
+
+    document.getElementById('nextBtnSimple').addEventListener('click', () => {
+        advanceToNext();
+    });
+
+    // ============================================================
+    // REFERENCE QUESTIONS CAROUSEL
+    // ============================================================
+    function showReferenceCarousel(q) {
+        const refs = q.reference_questions;
+        carouselIdx = 0;
+
+        const container = document.getElementById('carouselContainer');
+        container.innerHTML = '';
+
+        refs.forEach((ref, i) => {
+            const slide = document.createElement('div');
+            slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+            slide.dataset.index = i;
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'ref-header';
+            const label = ref.question_number
+                ? `ENEM 2025 — Question ${ref.question_number}`
+                : `Reference: ${ref.id}`;
+            const topicStr = ref.topic && ref.topic !== 'N/A' ? ` — ${escapeHtml(ref.topic)}` : '';
+            header.textContent = label + (topicStr ? topicStr.replace(/&amp;/g, '&') : '');
+            slide.appendChild(header);
+
+            // Images
+            if (ref.images && ref.images.length > 0) {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'ref-images';
+                ref.images.forEach(img => {
+                    const imgEl = document.createElement('img');
+                    imgEl.src = img.path;
+                    imgEl.alt = img.description || 'Reference image';
+                    imgDiv.appendChild(imgEl);
+                });
+                slide.appendChild(imgDiv);
+            }
+
+            // Prompt
+            if (ref.prompt) {
+                const prompt = document.createElement('div');
+                prompt.className = 'ref-prompt';
+                prompt.textContent = ref.prompt;
+                slide.appendChild(prompt);
+            } else if (ref.excerpt) {
+                // Fallback for excerpt-only references
+                const prompt = document.createElement('div');
+                prompt.className = 'ref-prompt';
+                prompt.textContent = ref.excerpt;
+                slide.appendChild(prompt);
+            }
+
+            // Options
+            if (ref.answer_options) {
+                const optList = document.createElement('ul');
+                optList.className = 'ref-options';
+                const letters = Object.keys(ref.answer_options).sort();
+                letters.forEach(letter => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${letter})</strong> ${escapeHtml(ref.answer_options[letter])}`;
+                    optList.appendChild(li);
+                });
+                slide.appendChild(optList);
+            }
+
+            container.appendChild(slide);
+        });
+
+        updateCarouselNav(refs.length);
+        document.getElementById('revealPanel').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('feedbackBanner').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function updateCarouselNav(total) {
+        document.getElementById('carouselCounter').textContent = `${carouselIdx + 1} / ${total}`;
+        document.getElementById('carouselPrev').disabled = (carouselIdx === 0);
+        document.getElementById('carouselNext').disabled = (carouselIdx === total - 1);
+    }
+
+    document.getElementById('carouselPrev').addEventListener('click', () => {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if (carouselIdx > 0) {
+            slides[carouselIdx].classList.remove('active');
+            carouselIdx--;
+            slides[carouselIdx].classList.add('active');
+            updateCarouselNav(slides.length);
+        }
+    });
+
+    document.getElementById('carouselNext').addEventListener('click', () => {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if (carouselIdx < slides.length - 1) {
+            slides[carouselIdx].classList.remove('active');
+            carouselIdx++;
+            slides[carouselIdx].classList.add('active');
+            updateCarouselNav(slides.length);
+        }
+    });
+
+    document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+        advanceToNext();
+    });
+
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+    function advanceToNext() {
+        if (currentIdx < questions.length - 1) {
+            currentIdx++;
+            renderQuestion();
+        } else {
+            // On the last question — check if all questions have been answered
+            const answeredIds = new Set(results.map(r => r.questionId));
+            const allAnswered = questions.every(q => answeredIds.has(q.id));
+            if (allAnswered) {
+                showResults();
+            } else {
+                const firstUnanswered = questions.findIndex(q => !answeredIds.has(q.id));
+                if (firstUnanswered >= 0) {
+                    currentIdx = firstUnanswered;
+                    renderQuestion();
+                } else {
+                    showResults();
+                }
+            }
+        }
+    }
+
+    // ============================================================
+    // RESULTS
+    // ============================================================
+    function showResults() {
+        document.getElementById('evalPage').style.display = 'none';
+        document.getElementById('resultsPage').style.display = 'block';
+
+        document.getElementById('resultsName').textContent = userName;
+
+        const correct = results.filter(r => r.correct).length;
+        const total = results.length;
+        const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+        document.getElementById('statCorrect').textContent = correct;
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statAccuracy').textContent = accuracy + '%';
+
+        // Order results by question order
+        const orderedResults = questions.map(q => results.find(r => r.questionId === q.id)).filter(Boolean);
+
+        const tbody = document.getElementById('resultsBody');
+        tbody.innerHTML = '';
+        orderedResults.forEach((r, i) => {
+            const tr = document.createElement('tr');
+            const truthLabel = r.truth === 'real' ? 'Original ENEM' : 'AI-generated';
+            const choiceLabel = r.choice === 'real' ? 'Original ENEM' : 'AI-generated';
+            tr.innerHTML = `
+                <td>${i + 1}</td>
+                <td>${escapeHtml(r.discipline)}</td>
+                <td><span class="badge ${r.truth === 'real' ? 'badge-real' : 'badge-ai'}">${truthLabel}</span></td>
+                <td><span class="badge ${r.choice === 'real' ? 'badge-real' : 'badge-ai'}">${choiceLabel}</span></td>
+                <td><span class="badge ${r.correct ? 'badge-correct' : 'badge-wrong'}">${r.correct ? 'Nailed it' : 'Fooled'}</span></td>
+                <td>${r.confidence}/5</td>
+                <td class="reasoning-cell">${r.reasoning ? escapeHtml(r.reasoning) : '<span style="color:#ccc">\u2014</span>'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        window.scrollTo(0, 0);
+    }
+
+    // ============================================================
+    // EXPORT CSV
+    // ============================================================
+    document.getElementById('exportBtn').addEventListener('click', () => {
+        const exportResults = questions.map(q => results.find(r => r.questionId === q.id)).filter(Boolean);
+        const rows = [['#', 'Name', 'Question ID', 'Discipline', 'Topic', 'Truth', 'Answer', 'Correct', 'Confidence', 'Reasoning']];
+        exportResults.forEach((r, i) => {
+            rows.push([
+                i + 1, userName, r.questionId, r.discipline, r.topic,
+                r.truth === 'real' ? 'Original ENEM' : 'AI-generated',
+                r.choice === 'real' ? 'Original ENEM' : 'AI-generated',
+                r.correct ? 'Yes' : 'No',
+                r.confidence, `"${r.reasoning.replace(/"/g, '""')}"`
+            ]);
+        });
+        const csv = rows.map(r => r.join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `turing_test_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+    </script>
+</body>
+</html>

@@ -284,17 +284,204 @@
             .stats-grid { grid-template-columns: 1fr; }
             .choice-group { flex-direction: column; }
             .confidence-btns { flex-wrap: wrap; }
+            .difficulty-btns { flex-wrap: wrap; }
+            .test-options { flex-direction: column; }
         }
+
+        /* --- Menu Page --- */
+        .menu-page {
+            display: flex; justify-content: center; align-items: center;
+            min-height: calc(100vh - 40px);
+        }
+        .menu-card {
+            background: white; padding: 40px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            max-width: 580px; width: 100%; text-align: center;
+        }
+        .menu-card h1 {
+            font-family: 'Quicksand', sans-serif; font-size: 28px; font-weight: 700;
+            color: #000; margin-bottom: 8px;
+        }
+        .menu-subtitle {
+            font-size: 15px; color: #666; margin-bottom: 32px;
+        }
+        .test-options { display: flex; gap: 16px; flex-direction: column; }
+        .test-option {
+            padding: 20px 24px; border: 2px solid #e0e0e0; border-radius: 12px;
+            background: white; cursor: pointer; transition: all 0.2s; text-align: left;
+            font-family: inherit;
+        }
+        .test-option:hover { border-color: #008F87; background: #E0F7F5; }
+        .test-option .option-title {
+            font-family: 'Quicksand', sans-serif; font-size: 16px; font-weight: 700;
+            color: #2c3e50; margin-bottom: 6px;
+        }
+        .test-option .option-desc { font-size: 13px; color: #666; line-height: 1.5; }
+
+        /* --- Difficulty Eval Page --- */
+        .diff-eval-page { display: none; }
+        .diff-results-page { display: none; }
+
+        /* Difficulty rating buttons */
+        .difficulty-group { margin-bottom: 20px; }
+        .difficulty-group label {
+            display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: #666;
+        }
+        .difficulty-btns { display: flex; gap: 8px; }
+        .diff-btn {
+            flex: 1; padding: 12px 8px; border: 2px solid #e0e0e0; border-radius: 8px;
+            background: white; font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; text-align: center; font-family: inherit;
+        }
+        .diff-btn:hover { border-color: #008F87; background: #E0F7F5; }
+        .diff-btn.selected { border-color: #008F87; background: #008F87; color: white; }
+
+        /* Correct answer highlight in difficulty mode */
+        .options-list li.correct-answer {
+            border-color: #008F87; background: #E0F7F5;
+        }
+        .options-list li.correct-answer strong { color: #006B65; }
+        .correct-badge {
+            display: inline-block; margin-left: 8px; padding: 2px 6px; background: #008F87;
+            color: white; border-radius: 4px; font-size: 11px; font-weight: 700;
+        }
+
+        /* Grade badge */
+        .q-grade-badge {
+            display: inline-block; padding: 2px 10px; background: #FFF8E1;
+            border: 1px solid #FFCC4C; border-radius: 20px;
+            font-size: 12px; font-weight: 700; color: #7d5800; margin-bottom: 14px;
+        }
+
+        /* Expected answer box for open questions */
+        .expected-answer-box {
+            background: #E0F7F5; border: 1px solid #008F87; border-radius: 8px;
+            padding: 16px; margin-top: 8px;
+        }
+        .expected-answer-label {
+            font-size: 11px; font-weight: 700; color: #008F87; margin-bottom: 10px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .expected-answer-text {
+            font-size: 14px; line-height: 1.7; color: #2c3e50; white-space: pre-wrap;
+        }
+
+        /* Difficulty options page */
+        .diff-options-page {
+            display: none; justify-content: center; align-items: center;
+            min-height: calc(100vh - 40px);
+        }
+        .diff-options-card {
+            background: white; padding: 40px; border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); border: 1px solid #e8ecef;
+            max-width: 520px; width: 100%;
+        }
+        .diff-options-card h1 {
+            font-family: 'Quicksand', sans-serif; font-size: 22px; font-weight: 700;
+            color: #000; margin-bottom: 6px;
+        }
+        .diff-options-card .subtitle {
+            font-size: 14px; color: #666; margin-bottom: 28px; line-height: 1.5;
+        }
+        .diff-option-full {
+            width: 100%; padding: 18px 20px; border: 2px solid #e0e0e0; border-radius: 12px;
+            background: white; cursor: pointer; transition: all 0.2s; text-align: left;
+            font-family: inherit; margin-bottom: 12px;
+        }
+        .diff-option-full:hover { border-color: #008F87; background: #E0F7F5; }
+        .diff-option-full .option-title {
+            font-family: 'Quicksand', sans-serif; font-size: 15px; font-weight: 700;
+            color: #2c3e50; margin-bottom: 3px;
+        }
+        .diff-option-full .option-desc { font-size: 13px; color: #666; }
+        .diff-option-custom {
+            border: 2px solid #e0e0e0; border-radius: 12px; padding: 18px 20px;
+        }
+        .diff-option-custom .option-title {
+            font-family: 'Quicksand', sans-serif; font-size: 15px; font-weight: 700;
+            color: #2c3e50; margin-bottom: 12px;
+        }
+        .custom-count-row {
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+        }
+        .custom-count-row label { font-size: 14px; color: #555; white-space: nowrap; }
+        .count-input {
+            width: 70px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px;
+            font-size: 15px; font-weight: 600; text-align: center; font-family: inherit;
+        }
+        .count-input:focus { outline: none; border-color: #008F87; box-shadow: 0 0 0 3px rgba(0,143,135,0.1); }
+        .btn-custom-start {
+            padding: 9px 20px; background: #008F87; color: white; border: none;
+            border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: background 0.2s;
+        }
+        .btn-custom-start:hover { background: #007A73; }
+        .btn-custom-start:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .diff-options-back {
+            margin-top: 20px; background: none; border: none; color: #999; font-size: 13px;
+            cursor: pointer; font-family: inherit; padding: 0;
+        }
+        .diff-options-back:hover { color: #666; }
+
+        /* Difficulty result badges */
+        .badge-very-easy { background: #E8F5E9; color: #2E7D32; }
+        .badge-easy { background: #F1F8E9; color: #558B2F; }
+        .badge-medium { background: #FFF8E1; color: #F57F17; }
+        .badge-hard { background: #FBE9E7; color: #BF360C; }
+        .badge-very-hard { background: #FCE4EC; color: #880E4F; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- MENU PAGE -->
+        <div class="menu-page" id="menuPage">
+            <div class="menu-card">
+                <h1>Teachy AI Tests</h1>
+                <p class="menu-subtitle">Select which evaluation you would like to participate in.</p>
+                <div class="test-options">
+                    <button class="test-option" id="menuTuringBtn">
+                        <div class="option-title">ENEM Turing Test</div>
+                        <div class="option-desc">Can you tell AI-generated questions apart from real ENEM questions? Rate your confidence after each answer.</div>
+                    </button>
+                    <button class="test-option" id="menuDiffBtn">
+                        <div class="option-title">Question Difficulty Evaluation</div>
+                        <div class="option-desc">Evaluate how difficult each ENEM question is for a student. You will see the correct answer — rate from Very Easy to Very Hard.</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIFFICULTY OPTIONS PAGE -->
+        <div class="diff-options-page" id="diffOptionsPage">
+            <div class="diff-options-card">
+                <h1>How many questions?</h1>
+                <p class="subtitle">You will rate the difficulty of each question from <strong>Very Easy</strong> to <strong>Very Hard</strong>.</p>
+
+                <button class="diff-option-full" id="diffFullBtn">
+                    <div class="option-title">Full Evaluation</div>
+                    <div class="option-desc">Rate all <strong>28 questions</strong> — ideal for a complete dataset.</div>
+                </button>
+
+                <div class="diff-option-custom">
+                    <div class="option-title">Custom</div>
+                    <div class="custom-count-row">
+                        <label for="countInput">I want to rate</label>
+                        <input type="number" id="countInput" class="count-input" min="1" max="28" value="10">
+                        <label>questions</label>
+                        <button class="btn-custom-start" id="diffCustomBtn">Let's go</button>
+                    </div>
+                </div>
+
+                <button class="diff-options-back" id="diffOptionsBackBtn">← Back to menu</button>
+            </div>
+        </div>
+
         <!-- START PAGE -->
-        <div class="start-page" id="startPage">
+        <div class="start-page" id="startPage" style="display:none">
             <div class="start-card">
-                <h1>ENEM Turing Test</h1>
-                <p class="subtitle">Can you tell AI-generated questions from original ENEM questions?</p>
-                <div class="description">
+                <h1 id="startTitle">ENEM Turing Test</h1>
+                <p class="subtitle" id="startSubtitle">Can you tell AI-generated questions from original ENEM questions?</p>
+                <div class="description" id="startDesc">
                     You will see ENEM-style questions — some are <strong>original ENEM questions</strong> from the 2025 exam, and some were <strong>generated by AI</strong>. For each question, decide which one it is, explain your reasoning, and rate your confidence.<br><br>
                     After each answer, you'll see whether you were right and — for AI-generated questions — the real ENEM questions that were used as references to generate it.
                 </div>
@@ -418,6 +605,86 @@
                 <button class="export-btn" id="exportBtn">Export CSV</button>
             </div>
         </div>
+
+        <!-- DIFFICULTY EVAL PAGE -->
+        <div class="diff-eval-page" id="diffEvalPage">
+            <div class="progress-header">
+                <h1>Difficulty Evaluation</h1>
+                <div class="progress-info">
+                    <span id="diffProgressText">1 / 10</span>
+                    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="diffProgressBar"></div></div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="q-number" id="diffQNumber"></div>
+                <div class="q-discipline" id="diffQDiscipline"></div>
+                <span class="q-grade-badge" id="diffQGrade"></span>
+                <div class="q-images" id="diffQImages"></div>
+                <div class="q-prompt" id="diffQPrompt"></div>
+                <ul class="options-list" id="diffQOptions"></ul>
+                <div class="expected-answer-box" id="diffExpectedAnswer" style="display:none">
+                    <div class="expected-answer-label">Model Answer (Gabarito)</div>
+                    <div class="expected-answer-text" id="diffExpectedAnswerText"></div>
+                </div>
+            </div>
+
+            <div class="eval-panel" id="diffEvalPanelForm">
+                <h2>Rate the difficulty</h2>
+                <div class="eval-question">How difficult is this question for a student?</div>
+
+                <div class="difficulty-group">
+                    <label>Difficulty level:</label>
+                    <div class="difficulty-btns" id="difficultyBtns">
+                        <button class="diff-btn" data-value="very_easy">Very Easy</button>
+                        <button class="diff-btn" data-value="easy">Easy</button>
+                        <button class="diff-btn" data-value="medium">Medium</button>
+                        <button class="diff-btn" data-value="hard">Hard</button>
+                        <button class="diff-btn" data-value="very_hard">Very Hard</button>
+                    </div>
+                </div>
+
+                <div class="reasoning-group">
+                    <label for="diffReasoningInput">Notes about this question (optional):</label>
+                    <textarea id="diffReasoningInput" placeholder="What makes this question easy or hard?"></textarea>
+                </div>
+
+                <div class="eval-buttons">
+                    <button class="back-btn" id="diffBackBtn" disabled>Back</button>
+                    <button class="submit-btn" id="diffSubmitBtn" disabled>Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIFFICULTY RESULTS PAGE -->
+        <div class="diff-results-page" id="diffResultsPage">
+            <div class="results-card">
+                <h1>Evaluation Complete</h1>
+                <p style="margin-bottom:20px; color:#666; font-size:14px;">Thank you, <strong id="diffResultsName"></strong>! Here is a summary of your ratings:</p>
+
+                <div class="stats-grid" id="diffStatsGrid"></div>
+
+                <div class="results-table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Grade</th>
+                                <th>Discipline</th>
+                                <th>Topic</th>
+                                <th>Correct Answer</th>
+                                <th>Your Rating</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="diffResultsBody"></tbody>
+                    </table>
+                </div>
+
+                <button class="export-btn" id="diffExportBtn">Export CSV</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -428,23 +695,485 @@
     const AI_QUESTIONS = [{"id": "generated-001", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Interpretação de Texto / Literatura", "prompt": "A memória é uma ilha de edição\n\nA memória não é um arquivo morto onde guardamos nossas experiências em ordem cronológica. Ela funciona mais como uma ilha de edição, onde as cenas são constantemente reorganizadas, cortadas, recolocadas em nova sequência. Cada vez que recordamos algo, não estamos simplesmente acessando um registro neutro do passado — estamos recriando aquele momento sob a influência do presente. Por isso, duas pessoas que viveram o mesmo evento podem ter lembranças completamente distintas: cada uma editou sua própria versão, privilegiando detalhes diferentes, atribuindo ênfases diversas, preenchendo lacunas com interpretações pessoais. A memória, portanto, revela menos sobre o que aconteceu e mais sobre quem somos agora.\n\nPessoas que compartilharam uma mesma experiência apresentam recordações divergentes porque a memória", "answer_options": {"A": "registra apenas fragmentos isolados dos acontecimentos vividos.", "B": "é influenciada pela perspectiva individual de cada sujeito.", "C": "distorce os fatos para proteger o bem-estar emocional.", "D": "prioriza eventos que ocorreram em ordem cronológica.", "E": "preserva detalhes objetivos em detrimento das interpretações."}, "images": [], "reference_questions": [{"id": "36F9B8D8902A-2025", "question_number": 8, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse texto, o que caracteriza a escrita \"de próprio punho\" é a letra manuscrita, enquanto a escrita digital é ilustrada pelo(a)", "answer_options": {"A": "utilização de tecnologias diversificadas.", "B": "desenvolvimento de novos recursos de escrita.", "C": "possibilidade de interações mediadas por telas.", "D": "diversidade de fontes tipográficas que estão disponíveis.", "E": "delimitação dos espaços onde a produção textual ocorre."}, "images": []}, {"id": "573B7D323C7D-2025", "question_number": 34, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Com base na relação dos elementos não verbais com a frase \"VOCÊ (NÃO) ESTÁ SOZINHO\", nessa capa de revista, a função poética fica evidente, pois", "answer_options": {"A": "essa frase informa sobre os riscos de um determinado comportamento social.", "B": "o conteúdo da mensagem expressa a atitude do enunciador sobre o tema.", "C": "a construção dessa frase possibilita mais de uma interpretação.", "D": "essa frase estabelece um diálogo direto com o leitor.", "E": "a linguagem utilizada volta-se para si mesma."}, "images": [{"description": "Magazine cover for Galileu showing the title \"A CIÊNCIA AJUDA VOCÊ A MUDAR O MUNDO\" (Science helps you change the world), ED. 371 FEVEREIRO DE 2023. The cover features multiple illustrated people floating in pool floats/life rings with the text \"VOCÊ (NÃO) ESTÁ SOZINHO\" (You are (not) alone). Below states \"NO BRASIL, METADE DA POPULAÇÃO SE SENTE SOLITÁRIA, E A MESMA SENSAÇÃO CRESCE EM OUTRAS PARTES DO MUNDO. POR QUE DEVEMOS REPENSAR NOSSAS RELAÇÕES?\" (In Brazil, half the population feels lonely, and the same sensation grows in other parts of the world. Why should we rethink our relationships?)", "path": "images/q034_fig1.png"}]}, {"id": "8BBEF601900C-2025", "question_number": 7, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "O elemento que caracteriza esse texto como uma crônica é a", "answer_options": {"A": "defesa das opiniões da autora sobre um tema de interesse coletivo.", "B": "exposição sobre o uso de tecnologias nas práticas de escrita atuais.", "C": "abordagem de fatos do contexto pessoal em uma perspectiva reflexiva.", "D": "utilização de recursos linguísticos para a interlocução direta com o leitor.", "E": "apresentação de acontecimentos segundo a ordem de sucessão no tempo."}, "images": []}, {"id": "D0E844C84286-2025", "question_number": 9, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}, {"id": "AF53E88208E0-2025", "question_number": 6, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "No que diz respeito ao gênero bilhete, a autora dessa crônica", "answer_options": {"A": "ressalta a formalidade na comunicação com as pessoas de sua convivência.", "B": "critica a ansiedade causada pela velocidade da comunicação.", "C": "expressa a obrigatoriedade de concisão nas anotações.", "D": "questiona a prática da escrita de próprio punho.", "E": "apresenta a diversidade de usos no cotidiano."}, "images": []}]}, {"id": "generated-002", "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": "Artes e Cultura / Variação Linguística", "prompt": "O repente é uma forma de expressão artística nordestina em que dois cantadores improvisam versos em desafio. Durante uma apresentação no interior do Ceará, um dos repentistas utilizou expressões como \"arretado\", \"bichim\", \"avexado\" e \"aperreado\", termos que fazem parte do vocabulário regional. Quando questionado sobre o uso dessas palavras, o artista explicou: \"Minha poesia nasce da terra onde piso. Falo do jeito que meu povo fala, porque é assim que consigo tocar o coração de quem me ouve. Se eu mudasse minha fala pra parecer mais correto, perderia a alma da cantoria.\"\n\nA escolha do repentista por manter as expressões regionais em sua arte revela uma concepção de linguagem que", "answer_options": {"A": "reconhece a legitimidade das variedades linguísticas como formas de identidade cultural.", "B": "defende a padronização da língua como meio de alcançar públicos mais amplos.", "C": "considera a norma culta inadequada para manifestações artísticas populares.", "D": "identifica o vocabulário regional como obstáculo à compreensão do público.", "E": "privilegia a espontaneidade da performance em detrimento da correção gramatical."}, "images": [], "reference_questions": [{"id": "8F01F682C736-2025", "question_number": 20, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A característica fundamental no aprendizado das práticas rituais nos candomblés é o processo iniciático e participante. Durante o período de reclusão em terreiro ou roça, iniciado passa por uma série de ritos esotéricos (banhos rituais, raspagem da cabeça etc.), ao mesmo tempo em que começa a adquirir um conhecimento codificado de similaridades materiais (substâncias, folhas, frutos, raízes etc.) e de gestos associados a um repertório linguístico específico das cerimônias que se desenrolam nos contextos sagrados em geral e em cada terreiro em particular.\n\nEsse repertório linguístico, genericamente chamado de \"língua de santo\" na Bahia, compreende uma terminologia religiosa operacional, de caráter mágico-semântico e de elaboração forma portuguesa, mas que repousa sobre sistemas lexicais de diferentes línguas africanas que provavelmente foram faladas no Brasil escravocrata, vindo a constituir uma língua ritual, que se acredita pertencer à nação do vodum, do orixá ou do inquice, e não a determinada nação africana política atual.\n\nDisponível em: https://periodicos.ufba.br Acesso em: 21 jan. 2024 (adaptado).\n\nA \"língua de santo\" tem sua importância para o patrimônio linguístico brasileiro por", "answer_options": {"A": "apresentar uma carga semântica mítica.", "B": "conservar elementos dos falares dos escravizados.", "C": "resgatar expressões portuguesas do período colonial.", "D": "decodificar o ritual religioso dos nossos antepassados.", "E": "favorecer a compreensão do léxico africano contemporâneo."}, "images": []}, {"id": "8BBEF601900C-2025", "question_number": 7, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "O elemento que caracteriza esse texto como uma crônica é a", "answer_options": {"A": "defesa das opiniões da autora sobre um tema de interesse coletivo.", "B": "exposição sobre o uso de tecnologias nas práticas de escrita atuais.", "C": "abordagem de fatos do contexto pessoal em uma perspectiva reflexiva.", "D": "utilização de recursos linguísticos para a interlocução direta com o leitor.", "E": "apresentação de acontecimentos segundo a ordem de sucessão no tempo."}, "images": []}, {"id": "36F9B8D8902A-2025", "question_number": 8, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "Nesse texto, o que caracteriza a escrita \"de próprio punho\" é a letra manuscrita, enquanto a escrita digital é ilustrada pelo(a)", "answer_options": {"A": "utilização de tecnologias diversificadas.", "B": "desenvolvimento de novos recursos de escrita.", "C": "possibilidade de interações mediadas por telas.", "D": "diversidade de fontes tipográficas que estão disponíveis.", "E": "delimitação dos espaços onde a produção textual ocorre."}, "images": []}, {"id": "D0E844C84286-2025", "question_number": 9, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "A autora conclui que as novas tecnologias de escrita", "answer_options": {"A": "evoluem para facilitar a vida cotidiana.", "B": "alcançam diferentes realidades sociais.", "C": "coexistem com outras já estabelecidas.", "D": "promovem maior agilidade na comunicação.", "E": "surgem nos contextos em que são necessárias."}, "images": []}, {"id": "AF53E88208E0-2025", "question_number": 6, "discipline": "Linguagens, Códigos e suas Tecnologias", "topic": null, "prompt": "No que diz respeito ao gênero bilhete, a autora dessa crônica", "answer_options": {"A": "ressalta a formalidade na comunicação com as pessoas de sua convivência.", "B": "critica a ansiedade causada pela velocidade da comunicação.", "C": "expressa a obrigatoriedade de concisão nas anotações.", "D": "questiona a prática da escrita de próprio punho.", "E": "apresenta a diversidade de usos no cotidiano."}, "images": []}]}, {"id": "generated-003", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Filosofia", "prompt": "O estado de natureza é um estado de guerra de todos contra todos, no qual a vida é solitária, pobre, sórdida, embrutecida e curta. Nessa condição, não há lugar para a indústria, pois seu fruto é incerto; não há cultivo da terra, nem navegação, nem comércio, nem artes, nem letras. E o que é pior: há contínuo temor e perigo de morte violenta. Para superar essa condição, os homens estabelecem um pacto pelo qual cada um renuncia ao direito natural de governar-se a si mesmo e transfere esse poder a um soberano comum, que garantirá a paz e a segurança de todos.\n\nA teoria política apresentada no texto justifica a autoridade do Estado pela", "answer_options": {"A": "preservação das liberdades individuais ilimitadas.", "B": "manutenção da igualdade econômica entre os cidadãos.", "C": "proteção coletiva contra a violência generalizada.", "D": "distribuição equitativa dos recursos naturais.", "E": "garantia da participação popular nas decisões políticas."}, "images": [], "reference_questions": [{"id": "685F4F811427-2025", "question_number": 87, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Durante a realeza, e nos primeiros anos republicanos, as leis eram transmitidas oralmente de uma geração para outra. A ausência de uma legislação escrita permitia aos patrícios manipular a justiça conforme seus interesses.\n\nCOULANGES, F. A cidade antiga. São Paulo: Martins Fontes, 2000.\n\nA conjuntura sociopolítica da Roma Antiga, conforme apresentada no texto, foi contestada pelos", "answer_options": {"A": "monarcas, que queriam expandir o código jurídico.", "B": "plebeus, que almejavam participar da vida política.", "C": "nobres, que desejavam superar a relação de dependência.", "D": "camponeses, que aspiravam diminuir a jornada de trabalho.", "E": "estrangeiros, que ambicionavam acessar os espaços públicos."}, "images": []}, {"id": "90B11C868E96-2025", "question_number": 66, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Independência de pensamento, autonomia e direito à opinião política estão sendo perdendo sua função crítica básica numa sociedade que parece cada vez mais capaz de atender às necessidades dos indivíduos através da forma pela qual é organizada. Nas condições de um padrão de vida crescente, a não conformismo com o próprio sistema parece socialmente inútil e principalmente quando acarreta desvantagens econômicas e políticas tangíveis e ameaça o funcionamento suave do todo.\n\nMARCUSE, H. Ideologia da sociedade industrial. Rio de Janeiro: Zahar, 1969.\n\nQual é a característica da sociedade industrial do século XX apresentada no texto?", "answer_options": {"A": "Gestão integrada.", "B": "Relativismo moral.", "C": "Desobediência civil.", "D": "Realidade unidimensional.", "E": "Desenvolvimento tecnológico."}, "images": []}, {"id": "3A83BD4EFCB1-2025", "question_number": 60, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Adam Smith via o açougueiro e o padeiro não só como indivíduos buscando outros interesses financeiros, mas pessoas moralmente motivadas dentro de uma sociedade. A base da moral era a empatia e o julgamento, instaurando uma distinção entre o que queremos fazer e o que sentimos que devemos fazer.\n\nCOLLIER, P. O futuro do capitalismo. Porto Alegre: LP&M, 2019.\n\nO texto defende uma motivação capitalista para o campo dos negócios, na qual o lucro se mostra associado à", "answer_options": {"A": "consolidação do poder político.", "B": "procura de satisfação subjetiva.", "C": "estruturação do monopólio comercial.", "D": "percepção de responsabilidade ética.", "E": "conquista do reconhecimento público."}, "images": []}, {"id": "0234A443BC9F-2025", "question_number": 82, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A cidade justa é governada pelos filósofos, administrada pelos cientistas, protegida pelos guerreiros e mantida pelos produtores. Cada classe cumprirá sua função para o bem da pólis, racionalmente dirigida pelos filósofos. Em contrapartida, a cidade injusta é aquela onde o governo está nas mãos dos proprietários — ricos que não pensam no bem comum da pólis e lutarão por interesses econômicos particulares.\n\nCHAUI, M. Convite à filosofia. São Paulo: Ática, 2000.\n\nO texto apresenta a estrutura de governo da cidade ideal pensada por Platão, que postula uma indissociabilidade entre", "answer_options": {"A": "cognoscência e relação intersubjetiva.", "B": "mitologia e teorias cosmogônicas.", "C": "cidadania e primazia da retórica.", "D": "moralidade e virtudes cardeais.", "E": "ética e exercício do poder."}, "images": []}, {"id": "7B2C037E9775-2025", "question_number": 61, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "O corpo de cidadãos é o poder supremo dos Estados. A supremacia pode residir ou num homem, ou na minoria, ou em todos. Sempre que o Um, ou a Minoria, ou Todos governam, tendo em vista o bem-estar comum, essas constituições são justas; mas se procuram apenas o benefício de uma das partes, seja ela o Um, a Minoria ou Todos, estabelece-se um desvio.\n\nARISTÓTELES. Política. São Paulo: Nova Cultural, 2000.\n\nNo excerto encontra-se a base da teoria clássica das três formas de governo representadas pela", "answer_options": {"A": "tirania, oligarquia e república.", "B": "burocracia, autarquia e império.", "C": "ditadura, autocracia e anarquia.", "D": "plutocracia, tecnocracia e demagogia.", "E": "monarquia, aristocracia e democracia."}, "images": []}]}, {"id": "generated-004", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "Geografia", "prompt": "O crescimento urbano acelerado nas últimas décadas tem provocado transformações significativas nas paisagens das grandes cidades brasileiras. Em muitas áreas metropolitanas, observa-se a expansão de ocupações irregulares em encostas e áreas de preservação ambiental, resultando em desmatamento, erosão do solo e aumento do risco de deslizamentos. Esse processo está frequentemente associado à segregação socioespacial, onde populações de baixa renda ocupam áreas ambientalmente frágeis, enquanto bairros planejados e com infraestrutura adequada concentram-se em zonas mais valorizadas.\n\nA imagem apresenta um exemplo dessa dinâmica urbana, evidenciando o contraste entre diferentes formas de ocupação do espaço.\n\nA partir da análise da imagem e do contexto apresentado, o principal fator que explica a ocupação de áreas ambientalmente vulneráveis nas cidades brasileiras é a", "answer_options": {"A": "ausência de políticas públicas de habitação popular em áreas centrais.", "B": "preferência cultural das populações por moradias em regiões elevadas.", "C": "incompatibilidade entre legislação ambiental e crescimento demográfico.", "D": "valorização imobiliária de terrenos próximos a áreas de preservação.", "E": "insuficiência de recursos tecnológicos para contenção de encostas."}, "images": [{"description": "Fotografia aérea mostrando ocupação irregular em encosta com desmatamento visível, casas construídas de forma desordenada subindo o morro, sinais de erosão do solo, contrastando com área urbana formal ou vegetação preservada ao fundo", "path": "images/question_004_fig1.png"}], "reference_questions": [{"id": "437FCD075F66-2025", "question_number": 80, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Cidade sustentável é o assentamento humano constituído por uma sociedade com consciência do seu papel na geração dos espaços e cuja relação não se dá pela razão natureza-objeto, e sim por uma ação sinérgica entre prudência ecológica, eficiência energética e equidade socioespacial.\n\nROMERO, M. Frentes do urbano para a construção de indicadores de sustentabilidade intraurbana. Paranoá, n. 4, nov. 2007.\n\nUma medida pública que contradiz o modelo de cidade exposto no texto é a", "answer_options": {"A": "coleta seletiva de lixo.", "B": "reutilização das águas pluviais.", "C": "canalização dos cursos hídricos.", "D": "arborização das avenidas centrais.", "E": "educação ambiental da comunidade."}, "images": []}, {"id": "6D0094E85F68-2025", "question_number": 68, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Salvador, capital do estado da Bahia.\n\nDisponível em: https://mundoeducacao.uol.com.br. Acesso em: 20 out. 2023.\n\nA análise dos elementos presentes na fotografia permite identificar qual característica socioespacial?", "answer_options": {"A": "Estagnação da especulação imobiliária.", "B": "Conservação da arquitetura colonial.", "C": "Implantação de moradias populares.", "D": "Predomínio da atividade comercial.", "E": "Processo de verticalização urbana."}, "images": [{"description": "Aerial photograph of Salvador, Bahia showing coastal urban landscape with tall buildings, a lighthouse on a rocky promontory, beaches, and mixed development patterns including both modern buildings and older urban areas", "path": "images/q068_fig1.png"}]}, {"id": "C3896877057B-2025", "question_number": 56, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Por séculos, o Rio Reno tem sido uma rota de navegação confiável, ajudando a criar gigantes fabris ao longo de suas margens. No entanto, esses dias parecem estar no fim, pois o nível da água tem diminuído regularmente, o que impede a navegação fluvial do final do verão até o outono. Isso mostra como a crise climática atinge as economias dos países ricos.\n\nDisponível em: www.estadao.com.br. Acesso em: 10 ago. 2023 (adaptado).\n\nQual é o efeito econômico do problema ambiental apresentado no texto?", "answer_options": {"A": "Supressão da extração de minério.", "B": "Intensificação da atividade de pesca.", "C": "Encarecimento da logística de transporte.", "D": "Inviabilização da agricultura de subsistência.", "E": "Sucateamento da indústria de transformação."}, "images": []}, {"id": "50872E1C94C2-2025", "question_number": 54, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A ideia de êxodo urbano assume ares caricaturais. Pega-se a mais reduzida parte da pirâmide social e projeta para todos seus desejos defensivos. Se o êxodo urbano for compreendido como aquisição de uma segunda residência, então não estamos, de fato, falando de êxodo, mas, sim, da inversão de um excedente. Se da renda de pequena fraca da elite para as franjas metropolitanas. Se o êxodo urbano for compreendido como retorno aos municípios menos povoados, então não estamos, de fato, falando de êxodo urbano, mas de um movimento de migração de pessoas cuja estabilidade no emprego e a elevada renda lhes permitem simular, nas ilhas urbanas do interior agropecuário, a vida urbana metropolitana.\n\nARTHUS, T. A. O distópico êxodo urbano. Revista e, n. 11, maio 2021 (adaptado).\n\nA crítica apresentada no texto evidencia uma dinâmica socioespacial marcada pela", "answer_options": {"A": "valorização de tradições rurais.", "B": "redução de plantações agrícolas.", "C": "estagnação de atividades comerciais.", "D": "precariedade de infraestruturas rodoviárias.", "E": "seletividade de deslocamentos populacionais."}, "images": []}, {"id": "0E91D29E9062-2025", "question_number": 86, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Pesquisa pioneira no Brasil propõe o uso de energia do solo para climatizar edifícios\n\nPela primeira vez na história, o Brasil terá um prédio que usa energia do solo para climatizar seus ambientes. Uma pesquisa inovadora avaliou o uso das fundações de edifícios como meio para a troca de energia térmica entre o prédio e o subsolo. A energia geotérmica é aquela encontrada dentro da crosta terrestre, seja no solo, nas rochas ou mesmo na água, sendo identificada pela temperatura. Essa energia pode ser transferida para a superfície por processos naturais ou provocados a partir das fundações da edificação.\n\nDisponível em: https://jornal.usp.br. Acesso em: 7 nov. 2021 (adaptado).\n\nPara o sistema elétrico brasileiro, a expansão de tecnologias como a descrita no texto representa uma tendência de", "answer_options": {"A": "homogeneização da oferta da matriz produtiva.", "B": "ampliação do consumo em unidades residenciais.", "C": "redução da pressão sobre as usinas hidrelétricas.", "D": "estagnação do consumo em unidades industriais.", "E": "superação da necessidade de recursos renováveis."}, "images": []}]}, {"id": "generated-005", "discipline": "Ciências Humanas e suas Tecnologias", "topic": "História / Sociologia", "prompt": "A estrutura social brasileira construída durante os séculos XVI e XVII estabeleceu padrões de desigualdade profundamente enraizados. Enquanto os senhores de terra monopolizavam o poder político e econômico, a maioria da população — indígenas escravizados, africanos trazidos compulsoriamente e mestizos sem terras — era sistematicamente excluída das estruturas de decisão e das garantias legais. Esse modelo persistiu mesmo após a Independência, quando a elite agrária manteve o controle através da Lei de Terras (1850) e do poder privado das oligarquias, impedindo o acesso à cidadania plena para a maioria dos brasileiros. Durante o século XX, especialmente no período da Ditadura Militar (1964-1985), os mecanismos de repressão e censura consolidaram a exclusão política, enquanto a concentração de renda aprofundava ainda mais a fragmentação social.\n\nCom base no contexto histórico apresentado, a permanência de estruturas de desigualdade e exclusão política do Brasil colonial até o período ditatorial evidencia que a cidadania no país:\n\nFERREIRA, J. A Construção da Ordem: A Elite Política Imperial. São Paulo: Campus, 1996 (adaptado).", "answer_options": {"A": "foi conquistada pelas massas populares através de movimentos revolucionários contínuos.", "B": "constituiu-se como privilégio de grupos economicamente dominantes, sendo negada à maioria.", "C": "sofreu avanços significativos após a abolição da escravatura, consolidando direitos para todos.", "D": "dependeu principalmente da vontade individual de cada cidadão em participar da vida política.", "E": "foi garantida pela Constituição Imperial, estabelecendo igualdade formal desde a Independência."}, "images": [{"description": "Fortaleza de São Brás localizada no litoral brasileiro durante o período colonial, representando a estrutura de poder e defesa do império português nas terras coloniais.", "path": "images/q068_fig1.png"}], "reference_questions": [{"id": "E916F3880A26-2025", "question_number": 73, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Entre esses preconceitos estava o canibalismo. A prática não era, porém, uma mentira, uma invenção europeia, mas um ritual controlado por regras. Entre os povos por exemplo, os guerreiros se sentiam honrados quando morriam em um banquete canibal. Para os europeus, no entanto, comer carne humana era abominável, pois nem mesmo os leões ingeriam seus semelhantes. Portanto, para os conquistadores, o canibalismo era sinônimo de barbarismo e da incapacidade de se autogovernar.\n\nRAIMINELLI, U. Canibalismo para alemão ver. In: FIGUEIREDO, L. (Org.). História do Brasil para ocupados. Rio de Janeiro: Casa da Palavra, 2013 (adaptado).\n\nNo texto, europeus e ameríndios atribuíram à prática relatada, respectivamente, o significado de", "answer_options": {"A": "selvageria — empoderamento.", "B": "impetuosidade — resistência.", "C": "fanatismo — humilhação.", "D": "intolerância — violência.", "E": "repressão — justiça."}, "images": []}, {"id": "8E5872A94E5A-2025", "question_number": 74, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Fragmentada entre pequenos grupos, fragilizada pela ausência de algum tipo de organização ampla, tendo que carregar o peso do preconceito racial que se transfere do negro para a cultura negra, a religião afro-brasileira em poucas situações deve sair melhor na competição — desigual — com outras religiões. Silenciosamente, assiste-se hoje a um verdadeiro massacre das religiões afro-brasileiras.\n\nPRANDI, R. O Brasil com axé. Estudos Avançados, n. 52, dez. 2004.\n\nNo processo de invisibilização dos cultos afro-brasileiros, o texto associa os seguintes elementos essenciais:", "answer_options": {"A": "Ausência de soluções partidárias e rejeição da laicidade.", "B": "Precariedade de coesão representativa e recusa da alteridade.", "C": "Insuficiência de estruturas decisórias e exclusão da dialogicidade.", "D": "Inexistência de direitos constitucionais e negação do ecumenismo.", "E": "Efemeridde das relações políticas e debilidade do pertencimento étnico."}, "images": []}, {"id": "D210FCA67C11-2025", "question_number": 81, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Em decorrência da naturalização da inferioridade social da mulher e da concepção de injustiça Estado, a igualdade abstratamente concebida, torna-se possível convencer o Estado burguês a conceber e implementar políticas públicas cujo escopo seja pela discriminação positiva de mulheres, embora isso aparentemente seja paradoxal.\n\nSAFFIOTI, H.; ALMEIDA, S. S. Violência de gênero: poder e impotência. Rio de Janeiro: Revinter, 1995 (adaptado).\n\nNo contexto atual, qual medida atende ao tipo de política pública abordada no texto?", "answer_options": {"A": "Ampliação do sufrágio universal.", "B": "Diminuição da jornada de trabalho.", "C": "Extinção do crime de feminicídio.", "D": "Redução da licença-maternidade.", "E": "Criação de delegacia especializada."}, "images": []}, {"id": "6D0094E85F68-2025", "question_number": 68, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "Salvador, capital do estado da Bahia.\n\nDisponível em: https://mundoeducacao.uol.com.br. Acesso em: 20 out. 2023.\n\nA análise dos elementos presentes na fotografia permite identificar qual característica socioespacial?", "answer_options": {"A": "Estagnação da especulação imobiliária.", "B": "Conservação da arquitetura colonial.", "C": "Implantação de moradias populares.", "D": "Predomínio da atividade comercial.", "E": "Processo de verticalização urbana."}, "images": [{"description": "Aerial photograph of Salvador, Bahia showing coastal urban landscape with tall buildings, a lighthouse on a rocky promontory, beaches, and mixed development patterns including both modern buildings and older urban areas", "path": "images/q068_fig1.png"}]}, {"id": "E3A131A078C0-2025", "question_number": 79, "discipline": "Ciências Humanas e suas Tecnologias", "topic": null, "prompt": "A missão dos governantes consiste em promover a felicidade da sociedade, punindo e recompensando. A parte da missão do governo que consiste em punir constitui mais particularmente o objeto da lei penal. A obrigatoriedade ou necessidade de punir uma ação é proporcional à medida que tal ação tende a perturbar a felicidade e à medida que a tendência do referido ato é perniciosa. A felicidade consiste naquilo que já vimos, ou seja, em desfrutar prazeres e em estar isento de dores.\n\nBENTHAM, J. Uma introdução aos princípios da moral e da legislação. São Paulo: Abril Cultural, 1974 (adaptado).\n\nQual perspectiva de justiça emerge da relação, estabelecida no texto, entre punição e felicidade?", "answer_options": {"A": "Aplicação de meios para atingir um fim.", "B": "Imposição de regras para estabelecer um dever.", "C": "Sobreposição de princípios para fundamentar um direito.", "D": "Criação de parâmetros para reconhecer uma prescrição.", "E": "Elaboração de convenções para referenciar um costume."}, "images": []}]}, {"id": "generated-006", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": "Biologia", "prompt": "QUESTÃO 6 - JOANINHAS EM HARMONIA\n\nA figura apresenta a herança genética de uma característica da série alelomórfica de uma mesma espécie. Partindo do cruzamento de indivíduos da geração parental (macho e fêmea), observa-se a proporção fenotípica de proles resultantes do cruzamento entre indivíduos da primeira geração.\n\nA análise fenotípica da proporção de indivíduos machos e fêmeas resultantes do cruzamento entre indivíduos da primeira geração demonstra qual padrão de herança?", "answer_options": {"A": "Herança autossômica dominante com padrão fenotípico 3:1 para machos e fêmeas.", "B": "Herança ligada ao sexo com diferentes proporções fenotípicas entre machos e fêmeas.", "C": "Herança poligênica com segregação independente das características em F2.", "D": "Herança mitocondrial resultando em homozigose obrigatória em ambos os sexos.", "E": "Herança com dominância incompleta gerando fenótipos intermediários únicos em fêmeas."}, "images": [{"description": "Diagrama mostrando herança genética em joaninhas: geração parental (macho e fêmea com diferentes cores de elítros), primeira geração (dois indivíduos), e segunda geração mostrando proporções fenotípicas de machos e fêmeas com diferentes colorações de elítros em padrões mendedianos.", "path": "images/question_006_fig1.png"}], "reference_questions": [{"id": "mock-ref-1", "question_number": 95, "topic": "Biologia - Genética", "excerpt": "Herança genética..."}, {"id": "mock-ref-2", "question_number": 98, "topic": "Biologia - Ecologia", "excerpt": "Relações ecológicas..."}, {"id": "mock-ref-3", "question_number": 102, "topic": "Biologia - Evolução", "excerpt": "Seleção natural..."}, {"id": "mock-ref-4", "question_number": 105, "topic": "Biologia - Genética", "excerpt": "Cruzamentos..."}, {"id": "mock-ref-5", "question_number": 110, "topic": "Biologia - Saúde", "excerpt": "Doenças genéticas..."}]}, {"id": "generated-007", "discipline": "Ciências da Natureza e suas Tecnologias", "topic": "Química", "prompt": "Uma unidade de tratamento de efluentes em uma refinaria de petróleo necessita neutralizar diariamente uma solução ácida resultante do processamento de hidrocarbonetos. O efluente contém ácido sulfúrico (H₂SO₄) em concentração de 2 mol/L, armazenado em tanques de 1000 litros.\n\nPara neutralizar completamente o ácido, utiliza-se hidróxido de sódio (NaOH) de acordo com a reação:\n\nH₂SO₄ + 2 NaOH → Na₂SO₄ + 2 H₂O\n\nDados: Massa molar de H₂SO₄ = 98 g/mol; Massa molar de NaOH = 40 g/mol\n\nQual é a massa de hidróxido de sódio, em quilogramas, necessária para neutralizar completamente todo o ácido sulfúrico contido em um tanque?\n\nDisponível em: www.gov.br/saude/tratamento-efluentes. Acesso em: 15 fev. 2026 (adaptado).", "answer_options": {"A": "80 kg", "B": "160 kg", "C": "320 kg", "D": "640 kg", "E": "800 kg"}, "images": [{"description": "Diagrama da reação química mostrando moléculas de H₂SO₄ (ácido sulfúrico) e 2 moléculas de NaOH (hidróxido de sódio) no lado esquerdo, uma seta apontando para a direita, e produtos Na₂SO₄ (sulfato de sódio) e 2 H₂O (água) no lado direito. Representação didática com fórmulas químicas em português.", "path": "images/question_007_fig1.png"}], "reference_questions": [{"id": "mock-7-0", "question_number": 97, "topic": "Química", "excerpt": "Ref 0..."}, {"id": "mock-7-1", "question_number": 98, "topic": "Química", "excerpt": "Ref 1..."}, {"id": "mock-7-2", "question_number": 99, "topic": "Química", "excerpt": "Ref 2..."}, {"id": "mock-7-3", "question_number": 100, "topic": "Química", "excerpt": "Ref 3..."}, {"id": "mock-7-4", "question_number": 101, "topic": "Química", "excerpt": "Ref 4..."}]}, {"id": "generated-009", "discipline": "Matemática e suas Tecnologias", "topic": "Probabilidade, Estatística e Combinatória", "prompt": "Uma escola realiza um sorteio entre seus 1200 alunos para distribuir 5 bolsas de estudo. O sorteio funciona da seguinte forma: são sorteados 5 números distintos entre 1 e 1200, sendo que o primeiro número sorteado ganha a bolsa A, o segundo ganha a bolsa B, o terceiro ganha a bolsa C, o quarto ganha a bolsa D, e o quinto ganha a bolsa E. As bolsas possuem valores diferentes: a bolsa A vale R$ 50 000, a bolsa B vale R$ 40 000, a bolsa C vale R$ 30 000, a bolsa D vale R$ 20 000 e a bolsa E vale R$ 10 000.\n\nUm aluno deseja calcular qual é a probabilidade de ele ganhar qualquer uma dessas cinco bolsas. Qual é essa probabilidade?", "answer_options": {"A": "5/1200 = 1/240", "B": "1/1200", "C": "5! / 1200", "D": "5 × (1/1200)", "E": "1/240"}, "images": [], "reference_questions": [{"id": "mock-9-0", "question_number": 99, "topic": "Probabilidade, Estatística e Combinatória", "excerpt": "Ref 0..."}, {"id": "mock-9-1", "question_number": 100, "topic": "Probabilidade, Estatística e Combinatória", "excerpt": "Ref 1..."}, {"id": "mock-9-2", "question_number": 101, "topic": "Probabilidade, Estatística e Combinatória", "excerpt": "Ref 2..."}, {"id": "mock-9-3", "question_number": 102, "topic": "Probabilidade, Estatística e Combinatória", "excerpt": "Ref 3..."}, {"id": "mock-9-4", "question_number": 103, "topic": "Probabilidade, Estatística e Combinatória", "excerpt": "Ref 4..."}]}];
 
     // ============================================================
+    // DIFFICULTY QUESTIONS — injected from questions.csv (28 questions)
+    // ============================================================
+    const DIFFICULTY_QUESTIONS = [
+        {
+            id: "q001",
+            grade: "1º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações",
+            question_type: "multiple_choice",
+            prompt: "João tem uma caixa de brinquedos. Dentro dela, há 3 carrinhos, 2 bolas e 4 bonecos. Quantos brinquedos João tem ao todo na caixa?",
+            answer_options: { "A": "9", "B": "7", "C": "8", "D": "10" },
+            correct_answer: "A",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q002",
+            grade: "1º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "Escrever palavras e frases de forma alfabética",
+            question_type: "multiple_choice",
+            prompt: "Qual letra completa a palavra 'P__TO' para formar o nome do animal que nada e faz 'quá-quá'?",
+            answer_options: { "A": "O", "B": "A", "C": "E", "D": "U" },
+            correct_answer: "B",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q003",
+            grade: "1º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Nomear e representar partes do corpo humano e hábitos de higiene",
+            question_type: "multiple_choice",
+            prompt: "Qual é a principal função dos dentes que nos ajuda a manter uma boa higiene bucal e a saúde do corpo?",
+            answer_options: {
+                "A": "Mastigar os alimentos para facilitar a digestão e ajudar na limpeza, prevenindo cáries.",
+                "B": "Produzir saliva para umedecer a boca e proteger contra bactérias.",
+                "C": "Ajudar a falar e formar as palavras corretamente para a comunicação.",
+                "D": "Sentir o sabor dos alimentos antes de engolir para identificar o que comemos."
+            },
+            correct_answer: "A",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q004",
+            grade: "1º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "Identificar aspectos do crescimento por meio do registro de lembranças particulares",
+            question_type: "multiple_choice",
+            prompt: "Qual das opções abaixo melhor nos ajuda a entender como crescemos e mudamos desde que éramos bem pequenos, usando as lembranças da nossa família?",
+            answer_options: {
+                "A": "Os livros que lemos na escola, pois eles ensinam sobre o passado.",
+                "B": "Os brinquedos novos que ganhamos no nosso último aniversário.",
+                "C": "As fotos antigas e as histórias que nossos pais e avós contam sobre nós.",
+                "D": "Os desenhos que nossos amigos fazem para nós na sala de aula."
+            },
+            correct_answer: "C",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q005",
+            grade: "3º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Utilizar diferentes procedimentos de cálculo mental e escrito para resolver problemas",
+            question_type: "open",
+            prompt: "Em uma loja de brinquedos, havia inicialmente 125 carrinhos. Durante a manhã, foram vendidos 37 carrinhos. À tarde, chegaram 50 carrinhos novos para repor o estoque. Com base nas operações de Adição e Subtração de Naturais, quantos carrinhos a loja tem agora?",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: Para resolver o problema, primeiro subtraímos os carrinhos vendidos do total inicial: 125 − 37 = 88 carrinhos. Em seguida, adicionamos os carrinhos novos que chegaram: 88 + 50 = 138 carrinhos. Portanto, a loja tem agora 138 carrinhos.",
+            images: []
+        },
+        {
+            id: "q006",
+            grade: "3º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "Identificar a ideia central do texto, demonstrando compreensão global",
+            question_type: "open",
+            prompt: "Leia o texto abaixo com atenção e responda à pergunta.\n\nA Amizade de Sofia e Totó\n\nSofia adora brincar com seu cachorro, o Totó. Todos os dias, depois da escola, ela pega a bolinha preferida dele e joga no quintal. Totó corre, pula e traz a bolinha de volta, abanando o rabo. Eles se divertem muito juntos e Sofia sempre dá um abraço apertado no seu amigo peludo.\n\nQual é a ideia principal que o texto quer nos contar sobre Sofia e Totó?",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: A ideia principal é que Sofia e seu cachorro Totó gostam muito de brincar juntos e são bons amigos.",
+            images: []
+        },
+        {
+            id: "q007",
+            grade: "3º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Identificar características sobre o modo de vida dos animais",
+            question_type: "open",
+            prompt: "Imagine que você é um peixe e precisa viver e se mover na água. Quais partes do seu corpo o ajudam a fazer isso? Explique a função de cada uma dessas partes.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: As brânquias permitem ao peixe respirar debaixo d'água, retirando o oxigênio necessário. As nadadeiras e a cauda são essenciais para a locomoção, ajudando o peixe a nadar, mudar de direção e se impulsionar. A forma hidrodinâmica do corpo também facilita o deslocamento rápido na água.",
+            images: []
+        },
+        {
+            id: "q008",
+            grade: "3º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "Identificar semelhanças e diferenças entre comunidades da cidade ou região",
+            question_type: "open",
+            prompt: "Pense na sua escola e no bairro onde você mora. Quais são as principais semelhanças e diferenças entre a comunidade da sua escola e a comunidade do seu bairro? Além disso, escolha um grupo de pessoas em cada um desses lugares (escola e bairro) e descreva qual o papel importante que esse grupo tem para o bom funcionamento de cada local.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: As comunidades da escola e do bairro são importantes para nossa convivência. Uma semelhança é que ambas possuem regras e pessoas com diferentes funções. Uma diferença é que a escola foca no ensino, e o bairro, na moradia e serviços. Na escola, os professores ensinam. No bairro, os comerciantes vendem produtos, ajudando a comunidade a funcionar.",
+            images: []
+        },
+        {
+            id: "q009",
+            grade: "5º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Identificar e representar frações, associando-as ao resultado de uma divisão",
+            question_type: "open",
+            prompt: "Imagine que você tem uma pizza dividida em 8 fatias iguais. Se você comeu 5 dessas fatias, como você pode representar a quantidade de pizza que você comeu usando um número decimal? Explique o processo para converter essa fração em um número decimal.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: A fração que representa a quantidade de pizza comida é 5/8. Para converter essa fração em um número decimal, dividimos o numerador (5) pelo denominador (8). A operação 5 ÷ 8 resulta em 0,625. Portanto, a quantidade de pizza comida pode ser representada como 0,625 em formato decimal.",
+            images: []
+        },
+        {
+            id: "q010",
+            grade: "5º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "Identificar, em narrativas, cenário, personagem central, conflito gerador e resolução",
+            question_type: "open",
+            prompt: "Imagine que você vai criar uma pequena história sobre um animal de estimação que se perdeu na cidade grande. Para que sua narrativa seja clara e emocionante, responda às seguintes perguntas:\n\n1. Qual seria o cenário principal onde a história acontece?\n2. Quem seria o personagem central?\n3. Qual seria o conflito gerador dessa história?\n4. Como esse conflito seria resolvido?\n5. Você contaria essa história usando a primeira pessoa (como se você fosse o animal) ou a terceira pessoa (como se fosse um narrador que observa tudo)? Explique sua escolha.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: Para uma história completa, o aluno deve descrever cada elemento. O cenário é o local da ação, o personagem central é o protagonista, e o conflito gerador é o problema que impulsiona a trama. A resolução é como esse problema é superado. Por fim, o ponto de vista (primeira ou terceira pessoa) deve ser escolhido e sua justificativa apresentada.",
+            images: []
+        },
+        {
+            id: "q011",
+            grade: "5º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Aplicar os conhecimentos sobre as mudanças de estado físico da água para explicar o ciclo",
+            question_type: "open",
+            prompt: "O ciclo da água é um processo fundamental para a vida na Terra e para a manutenção dos ecossistemas. Considerando o que você aprendeu sobre as mudanças de estado físico da água (evaporação, condensação, precipitação), explique como a água, ao circular na natureza, contribui para o equilíbrio e a sobrevivência dos seres vivos em um ecossistema.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: O ciclo da água garante que a água esteja disponível em diferentes formas e locais para os seres vivos. A evaporação forma nuvens que, ao se condensarem, geram a chuva, essencial para plantas e animais. Essa chuva reabastece rios, lagos e o solo, fornecendo água potável e mantendo a umidade necessária para a vegetação.",
+            images: []
+        },
+        {
+            id: "q012",
+            grade: "5º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "Identificar os diferentes tipos de energia utilizados na produção industrial, agrícola e no cotidiano",
+            question_type: "open",
+            prompt: "As Regiões do Brasil possuem muitas atividades, desde plantar alimentos (agricultura) até fazer produtos em fábricas (indústria) e retirar recursos da natureza (extrativismo). No dia a dia das pessoas, a energia também é fundamental. Cite dois tipos de energia importantes para essas atividades e para a vida das pessoas nas diferentes regiões do Brasil, explicando como cada um deles é usado.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: Os alunos devem citar dois tipos de energia, como a elétrica, solar, eólica, hidrelétrica, biomassa ou combustíveis fósseis. Para cada uma, devem explicar seu uso, como a eletricidade para ligar máquinas em fábricas e iluminar casas, ou a energia solar para aquecer água e gerar eletricidade em residências.",
+            images: []
+        },
+        {
+            id: "q013",
+            grade: "7º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Comparar e ordenar números inteiros em diferentes contextos",
+            question_type: "multiple_choice",
+            prompt: "Em uma manhã de inverno rigoroso, a temperatura em uma cidade era de 5°C. Ao longo do dia, a temperatura caiu 12°C. Qual foi a temperatura final registrada na cidade?",
+            answer_options: { "A": "7°C", "B": "−7°C", "C": "−17°C", "D": "17°C" },
+            correct_answer: "B",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q014",
+            grade: "7º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "Distinguir diferentes propostas editoriais — sensacionalismo, jornalismo investigativo etc.",
+            question_type: "multiple_choice",
+            prompt: 'Ao analisar a manchete "URGENTE! DESCOBERTA CHOCA CIENTISTAS E PODE MUDAR TUDO QUE VOCÊ SABE SOBRE O FUTURO!", qual característica principal indica uma proposta editorial sensacionalista?',
+            answer_options: {
+                "A": "A apresentação detalhada de evidências e fontes confiáveis para comprovar a informação.",
+                "B": "O uso de termos alarmistas e exagerados para criar impacto emocional e curiosidade intensa no leitor.",
+                "C": "A linguagem formal e técnica, voltada para um público especializado no assunto.",
+                "D": "O foco em dados estatísticos precisos para informar sobre a relevância da descoberta."
+            },
+            correct_answer: "B",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q015",
+            grade: "7º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Caracterizar os principais ecossistemas brasileiros quanto à paisagem, quantidade de água e biodiversidade",
+            question_type: "multiple_choice",
+            prompt: "O bioma brasileiro caracterizado por extensas áreas de planícies que são ciclicamente inundadas por rios e chuvas, criando um mosaico de ambientes aquáticos e terrestres. O solo, em geral, é argiloso e rico em nutrientes. A flora apresenta espécies adaptadas a longos períodos de submersão, como o aguapé, e a fauna é exuberante, com destaque para a grande diversidade de aves, peixes e mamíferos como a onça-pintada. Qual dos seguintes biomas corresponde a essa descrição?",
+            answer_options: { "A": "Pantanal", "B": "Amazônia", "C": "Cerrado", "D": "Caatinga" },
+            correct_answer: "A",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q016",
+            grade: "7º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "",
+            question_type: "multiple_choice",
+            prompt: "A chegada dos europeus à América, no contexto da Expansão Marítima, provocou profundas transformações nas sociedades indígenas. Qual das alternativas a seguir descreve uma das principais consequências sociais desse processo, sob a perspectiva sociológica?",
+            answer_options: {
+                "A": "Aumento significativo da população indígena devido à introdução de novas culturas agrícolas.",
+                "B": "Desestruturação das organizações sociais e políticas nativas, substituídas por novas hierarquias impostas pelos colonizadores.",
+                "C": "Fortalecimento das religiões nativas, que se tornaram mais influentes com a chegada de novas crenças.",
+                "D": "Criação de um sistema de comércio igualitário entre europeus e indígenas, promovendo a prosperidade mútua."
+            },
+            correct_answer: "B",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q017",
+            grade: "9º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Resolver problemas que envolvam a razão entre duas grandezas de espécies diferentes",
+            question_type: "open",
+            prompt: "Um veículo percorre uma distância de 200 km de ida e 200 km de volta. Na viagem de volta, a velocidade média foi 10 km/h menor do que na viagem de ida. Se o tempo total gasto na viagem de ida e volta foi de 9 horas, qual foi a velocidade média do veículo na viagem de ida?",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: Seja v a velocidade média na ida. A velocidade na volta é v − 10 km/h.\n\nTempo total: 200/v + 200/(v−10) = 9\n\nMultiplicando por v(v−10): 400v − 2000 = 9v² − 90v → 9v² − 490v + 2000 = 0\n\nBhaskara: Δ = 168100 → √Δ = 410\nv₁ = (490 + 410) / 18 = 50 km/h ✓\nv₂ ≈ 4,44 km/h (inviável)\n\nA velocidade média na ida foi 50 km/h.",
+            images: []
+        },
+        {
+            id: "q018",
+            grade: "9º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "Produzir artigos de opinião, assumindo posição e argumentando",
+            question_type: "open",
+            prompt: "Imagine que você precisa escrever um artigo de opinião para o jornal da escola sobre o tema 'O uso de inteligência artificial na educação básica: benefícios e desafios'. Elabore um plano argumentativo que inclua:\n\na) a tese que você defenderá;\nb) três tipos de argumentos diferentes (de autoridade, de comprovação, de exemplificação, de princípio ou de causa e consequência);\nc) uma breve justificativa para a escolha de cada argumento.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: A tese poderia ser 'A integração da IA na educação básica é essencial para preparar os alunos para o futuro, mas exige planejamento cuidadoso'. Argumentos de autoridade (especialistas) dariam credibilidade. Argumentos de comprovação (dados sobre engajamento) forneceriam evidências. Argumentos de exemplificação (casos de sucesso) tornariam a ideia tangível.",
+            images: []
+        },
+        {
+            id: "q019",
+            grade: "9º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Comparar quantidades de reagentes e produtos em transformações químicas",
+            question_type: "open",
+            prompt: "Em uma transformação química, 100 gramas de um reagente X reagem completamente com 25 gramas de um reagente Y, resultando na formação de 125 gramas de um produto Z. Considerando a lei da conservação das massas e a lei das proporções definidas, determine:\n\na) Qual a massa do reagente Y necessária para reagir completamente com 300 gramas do reagente X?\nb) Qual a massa do produto Z que será formada nessa nova reação?",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "Gabarito: A proporção entre X e Y é 4:1. Para 300 g de X → 75 g de Y.\n\nPela Lei da Conservação das Massas: 300 + 75 = 375 g de Z.\nConfirmação: proporção X:Z = 4:5, portanto 300 g de X formam 375 g de Z.",
+            images: []
+        },
+        {
+            id: "q020",
+            grade: "9º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "Descrever e contextualizar os processos da emergência do fascismo e do nazismo",
+            question_type: "multiple_choice",
+            prompt: "No contexto da emergência e consolidação dos regimes totalitários que precederam a Segunda Guerra Mundial, a Alemanha Nazista empregou diversas estratégias para garantir o controle absoluto do Estado e da sociedade. Em relação às práticas de extermínio, como o Holocausto, qual das seguintes ações foi fundamental para a sua implementação e justificação ideológica?",
+            answer_options: {
+                "A": "O estabelecimento de um sistema econômico liberal de livre mercado para atrair investimentos e fortalecer a indústria nacional.",
+                "B": "O incentivo à diversidade de partidos políticos e à liberdade de imprensa para garantir a participação popular nas decisões estatais.",
+                "C": "A promoção de acordos de cooperação internacional e desarmamento, visando à manutenção da paz e estabilidade na Europa.",
+                "D": "A descentralização administrativa e a concessão de autonomia significativa às regiões para respeitar as identidades culturais locais.",
+                "E": "A intensa campanha de propaganda e censura que demonizava minorias étnicas e políticas, construindo uma narrativa de inimigo interno."
+            },
+            correct_answer: "E",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q021",
+            grade: "[EM] 2º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Resolver e elaborar problemas do cotidiano envolvendo equações logarítmicas",
+            question_type: "multiple_choice",
+            prompt: "Considere duas quantidades, x e y, que satisfazem o seguinte sistema de equações logarítmicas:\n\nlog₃(x) + log₃(y) = 4\nlog₃(x) − log₃(y) = 2\n\nQual é o valor da soma x + y?",
+            answer_options: { "A": "28", "B": "3", "C": "81", "D": "9", "E": "30" },
+            correct_answer: "E",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q022",
+            grade: "[EM] 2º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "",
+            question_type: "multiple_choice",
+            prompt: "Ao abordar a leitura crítica de um artigo de opinião que discute uma questão social complexa, um leitor perspicaz identifica que o autor possui uma participação ativa em um movimento social específico e que a publicação ocorreu em um veículo de comunicação com uma reconhecida orientação ideológica. De que maneira a consideração dessas condições de produção e do contexto de circulação do texto contribui para a construção de sentidos e a análise crítica?",
+            answer_options: {
+                "A": "Confirmando a objetividade da informação apresentada, pois o autor e o veículo compartilham uma mesma visão de mundo.",
+                "B": "Permitindo ao leitor discernir as perspectivas ideológicas e os propósitos comunicativos implícitos, enriquecendo a compreensão da argumentação e dos posicionamentos veiculados.",
+                "C": "Desqualificando automaticamente o conteúdo do texto, por se tratar de uma produção com evidente engajamento político.",
+                "D": "Limitando a interpretação do texto à adesão ou rejeição imediata da ideologia do autor e do veículo de comunicação.",
+                "E": "Focando a atenção do leitor apenas na estrutura gramatical e no vocabulário utilizado, desconsiderando o contexto externo."
+            },
+            correct_answer: "B",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q023",
+            grade: "[EM] 2º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Construir questões e elaborar hipóteses sobre genética",
+            question_type: "open",
+            prompt: "Em uma espécie de planta, a cor da flor vermelha (V) é dominante sobre a cor branca (v), e o caule alto (A) é dominante sobre o caule baixo (a). Um geneticista realizou um cruzamento entre uma planta pura de flores vermelhas e caule alto com uma planta pura de flores brancas e caule baixo. A geração F1 resultante foi então autofecundada. Com base nas Leis de Mendel, descreva os genótipos e fenótipos esperados para a geração F1 e determine as proporções fenotípicas esperadas na geração F2, justificando suas conclusões.",
+            answer_options: {},
+            correct_answer: "",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q024",
+            grade: "[EM] 2º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "Identificar, analisar e comparar diferentes fontes e narrativas",
+            question_type: "multiple_choice",
+            prompt: "Durante a Era Vargas (1930-1945), a República Brasileira testemunhou profundas transformações nas relações entre o Estado e a sociedade civil, especialmente no que tange à organização da classe trabalhadora. Considerando a perspectiva sociológica sobre o papel do Estado na regulamentação do trabalho, qual foi a principal característica da política trabalhista varguista e seu impacto na autonomia dos sindicatos?",
+            answer_options: {
+                "A": "O incentivo à formação de sindicatos livres e independentes, promovendo a plena autonomia dos trabalhadores na negociação de suas demandas com o patronato.",
+                "B": "A abolição de todas as leis trabalhistas existentes, resultando na completa desregulamentação do mercado de trabalho e na precarização generalizada.",
+                "C": "A implementação de um sistema de cogestão empresarial, onde representantes dos trabalhadores e empregadores compartilhavam igualmente a administração das indústrias.",
+                "D": "O estabelecimento de um modelo de laissez-faire econômico, que defendia a não intervenção estatal nas relações de trabalho, deixando-as exclusivamente sob a égide do mercado.",
+                "E": "A criação de uma estrutura sindical corporativista, que submetia os sindicatos ao controle estatal e os integrava como órgãos colaboradores do governo, em detrimento de sua autonomia."
+            },
+            correct_answer: "E",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q025",
+            grade: "[EM] 3º Ano",
+            discipline: "Matemática e suas Tecnologias",
+            topic: "Interpretar e comparar situações que envolvam juros simples e juros compostos",
+            question_type: "multiple_choice",
+            prompt: "Considere duas aplicações financeiras com o mesmo capital inicial de R$1.000,00 e a mesma taxa de juros de 10% ao ano. A Aplicação A rende juros simples, enquanto a Aplicação B rende juros compostos. Qual das seguintes afirmações descreve corretamente a natureza do crescimento do montante em cada aplicação ao longo do tempo, quando representadas graficamente?",
+            answer_options: {
+                "A": "Ambas as aplicações exibem um crescimento linear, mas a Aplicação B cresce mais rapidamente.",
+                "B": "Ambas as aplicações exibem um crescimento exponencial, mas a Aplicação A cresce mais lentamente.",
+                "C": "A Aplicação A exibe um crescimento exponencial, e a Aplicação B exibe um crescimento linear.",
+                "D": "A Aplicação A exibe um crescimento linear, enquanto a Aplicação B exibe um crescimento exponencial.",
+                "E": "O crescimento de ambas as aplicações é constante ao longo do tempo."
+            },
+            correct_answer: "D",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q026",
+            grade: "[EM] 3º Ano",
+            discipline: "Linguagens e Códigos",
+            topic: "",
+            question_type: "multiple_choice",
+            prompt: "Ao analisar criticamente um artigo de opinião publicado em um jornal de grande circulação durante um período de intensa polarização política, qual aspecto das condições de produção do texto é mais relevante para compreender suas perspectivas e objetivos?",
+            answer_options: {
+                "A": "A formação acadêmica do autor e sua experiência profissional prévia.",
+                "B": "O número de parágrafos utilizados para desenvolver cada argumento principal.",
+                "C": "A presença de figuras de linguagem complexas ao longo do texto.",
+                "D": "A filiação ideológica presumida do veículo de comunicação e o momento político específico.",
+                "E": "O uso exclusivo de dados estatísticos para sustentar as teses apresentadas."
+            },
+            correct_answer: "D",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q027",
+            grade: "[EM] 3º Ano",
+            discipline: "Ciências da Natureza",
+            topic: "Construir questões e elaborar hipóteses sobre genética e seleção natural",
+            question_type: "multiple_choice",
+            prompt: "Em uma família, o pai é heterozigoto para uma doença genética autossômica recessiva (genótipo Aa), e a mãe é portadora, também heterozigota (genótipo Aa). Qual é a probabilidade de o primeiro filho desse casal ser afetado por essa doença?",
+            answer_options: { "A": "25%", "B": "0%", "C": "50%", "D": "75%", "E": "100%" },
+            correct_answer: "A",
+            expected_answer: "",
+            images: []
+        },
+        {
+            id: "q028",
+            grade: "[EM] 3º Ano",
+            discipline: "Ciências Humanas e Sociais Aplicadas",
+            topic: "Identificar, analisar e comparar diferentes fontes e narrativas",
+            question_type: "multiple_choice",
+            prompt: "Desde a Proclamação da República no Brasil, o conceito de cidadania tem se mostrado complexo e em constante evolução. Considerando a tensão entre a formalização legal de direitos e a sua efetivação social, qual alternativa melhor descreve um aspecto central da evolução da cidadania na República Brasileira?",
+            answer_options: {
+                "A": "A expansão gradual dos direitos civis, políticos e sociais, frequentemente limitada por desigualdades estruturais e pela fragilidade das instituições democráticas.",
+                "B": "A imediata e plena garantia de todos os direitos civis e políticos para toda a população após a Proclamação da República.",
+                "C": "A priorização exclusiva dos direitos sociais em detrimento dos direitos civis e políticos ao longo de todo o período republicano.",
+                "D": "A estagnação completa do conceito de cidadania, sem qualquer alteração significativa desde a primeira Constituição republicana.",
+                "E": "A garantia irrestrita e universal de direitos políticos a todos os cidadãos, independentemente de gênero, raça ou renda, desde o início da República."
+            },
+            correct_answer: "A",
+            expected_answer: "",
+            images: []
+        }
+    ];
+
+    // ============================================================
     // APP STATE
     // ============================================================
+    let currentMode = null;
     let userName = '';
+
+    // Turing Test state
     let questions = [];
     let currentIdx = 0;
     let results = [];
     let carouselIdx = 0;
 
-    // ============================================================
-    // INIT
-    // ============================================================
-    const totalQ = REAL_QUESTIONS.length + AI_QUESTIONS.length;
-    document.getElementById('qCountInfo').textContent =
-        `${totalQ} questions total (shuffled randomly)`;
+    // Difficulty Evaluation state
+    let diffQuestions = [];
+    let diffCurrentIdx = 0;
+    let diffResults = [];
+    let diffCurrentDifficulty = null;
 
+    // ============================================================
+    // INIT — Menu
+    // ============================================================
     const nameInput = document.getElementById('nameInput');
     const startBtn = document.getElementById('startBtn');
+
+    document.getElementById('menuTuringBtn').addEventListener('click', () => {
+        currentMode = 'turing';
+        document.getElementById('startTitle').textContent = 'ENEM Turing Test';
+        document.getElementById('startSubtitle').textContent = 'Can you tell AI-generated questions from original ENEM questions?';
+        document.getElementById('startDesc').innerHTML =
+            'You will see ENEM-style questions — some are <strong>original ENEM questions</strong> from the 2025 exam, and some were <strong>generated by AI</strong>. For each question, decide which one it is, explain your reasoning, and rate your confidence.<br><br>' +
+            'After each answer, you\'ll see whether you were right and — for AI-generated questions — the real ENEM questions that were used as references to generate it.';
+        const total = REAL_QUESTIONS.length + AI_QUESTIONS.length;
+        document.getElementById('qCountInfo').textContent = `${total} questions total (shuffled randomly)`;
+        nameInput.value = '';
+        startBtn.disabled = true;
+        startBtn.textContent = 'Start the test';
+        document.getElementById('menuPage').style.display = 'none';
+        document.getElementById('startPage').style.display = 'flex';
+    });
+
+    document.getElementById('menuDiffBtn').addEventListener('click', () => {
+        currentMode = 'difficulty';
+        document.getElementById('menuPage').style.display = 'none';
+        document.getElementById('diffOptionsPage').style.display = 'flex';
+    });
+
+    function startDiffWithCount(count) {
+        document.getElementById('startTitle').textContent = 'Question Difficulty Evaluation';
+        document.getElementById('startSubtitle').textContent = 'Rate the difficulty of ENEM questions.';
+        document.getElementById('startDesc').innerHTML =
+            'You will see ENEM questions along with the <strong>correct answer highlighted</strong>. Your task is to rate how difficult each question is for a typical student.<br><br>' +
+            'Use the scale: <strong>Very Easy → Easy → Medium → Hard → Very Hard</strong>. You can optionally add notes about what makes each question easy or challenging.';
+        document.getElementById('qCountInfo').textContent = `${count} question${count !== 1 ? 's' : ''} to evaluate`;
+        nameInput.value = '';
+        startBtn.disabled = true;
+        startBtn.textContent = 'Start evaluation';
+        document.getElementById('diffOptionsPage').style.display = 'none';
+        document.getElementById('startPage').style.display = 'flex';
+        // Store chosen count so startBtn handler can slice
+        startBtn.dataset.diffCount = count;
+    }
+
+    document.getElementById('diffFullBtn').addEventListener('click', () => {
+        startDiffWithCount(DIFFICULTY_QUESTIONS.length);
+    });
+
+    document.getElementById('diffCustomBtn').addEventListener('click', () => {
+        const input = document.getElementById('countInput');
+        const count = Math.max(1, Math.min(DIFFICULTY_QUESTIONS.length, parseInt(input.value) || 1));
+        input.value = count;
+        startDiffWithCount(count);
+    });
+
+    document.getElementById('countInput').addEventListener('input', function() {
+        const val = parseInt(this.value);
+        document.getElementById('diffCustomBtn').disabled = !val || val < 1;
+    });
+
+    document.getElementById('diffOptionsBackBtn').addEventListener('click', () => {
+        document.getElementById('diffOptionsPage').style.display = 'none';
+        document.getElementById('menuPage').style.display = 'flex';
+    });
 
     nameInput.addEventListener('input', () => {
         startBtn.disabled = !nameInput.value.trim();
@@ -452,10 +1181,22 @@
 
     startBtn.addEventListener('click', () => {
         userName = nameInput.value.trim();
-        buildQuestionSet();
         document.getElementById('startPage').style.display = 'none';
-        document.getElementById('evalPage').style.display = 'block';
-        renderQuestion();
+        if (currentMode === 'turing') {
+            buildQuestionSet();
+            document.getElementById('evalPage').style.display = 'block';
+            renderQuestion();
+        } else {
+            const count = parseInt(startBtn.dataset.diffCount) || DIFFICULTY_QUESTIONS.length;
+            diffQuestions = [...DIFFICULTY_QUESTIONS];
+            shuffle(diffQuestions);
+            diffQuestions = diffQuestions.slice(0, count);
+            diffCurrentIdx = 0;
+            diffResults = [];
+            diffCurrentDifficulty = null;
+            document.getElementById('diffEvalPage').style.display = 'block';
+            renderDiffQuestion();
+        }
     });
 
     function buildQuestionSet() {
@@ -879,6 +1620,244 @@
         const a = document.createElement('a');
         a.href = url;
         a.download = `turing_test_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    // ============================================================
+    // DIFFICULTY EVALUATION FLOW
+    // ============================================================
+    const DIFFICULTY_LABELS = {
+        'very_easy': 'Very Easy',
+        'easy': 'Easy',
+        'medium': 'Medium',
+        'hard': 'Hard',
+        'very_hard': 'Very Hard'
+    };
+    const DIFFICULTY_BADGE_CLASS = {
+        'very_easy': 'badge-very-easy',
+        'easy': 'badge-easy',
+        'medium': 'badge-medium',
+        'hard': 'badge-hard',
+        'very_hard': 'badge-very-hard'
+    };
+
+    function renderDiffQuestion() {
+        const q = diffQuestions[diffCurrentIdx];
+
+        document.getElementById('diffQNumber').textContent = `Question ${diffCurrentIdx + 1} of ${diffQuestions.length}`;
+        document.getElementById('diffQDiscipline').textContent = q.discipline + (q.topic ? ` — ${q.topic}` : '');
+        document.getElementById('diffQGrade').textContent = q.grade || '';
+        document.getElementById('diffQPrompt').textContent = q.prompt;
+
+        // Images
+        const imgContainer = document.getElementById('diffQImages');
+        imgContainer.innerHTML = '';
+        if (q.images && q.images.length > 0) {
+            imgContainer.style.display = '';
+            q.images.forEach(img => {
+                const wrapper = document.createElement('div');
+                const imgEl = document.createElement('img');
+                imgEl.src = img.path;
+                imgEl.alt = img.description || 'Question image';
+                wrapper.appendChild(imgEl);
+                if (img.description) {
+                    const desc = document.createElement('div');
+                    desc.className = 'img-desc';
+                    desc.textContent = img.description;
+                    wrapper.appendChild(desc);
+                }
+                imgContainer.appendChild(wrapper);
+            });
+        } else {
+            imgContainer.style.display = 'none';
+        }
+
+        // Options / expected answer — depends on question type
+        const optList = document.getElementById('diffQOptions');
+        const expectedBox = document.getElementById('diffExpectedAnswer');
+        const expectedText = document.getElementById('diffExpectedAnswerText');
+        optList.innerHTML = '';
+
+        if (q.question_type === 'open') {
+            optList.style.display = 'none';
+            if (q.expected_answer) {
+                expectedText.textContent = q.expected_answer;
+                expectedBox.style.display = '';
+            } else {
+                expectedBox.style.display = 'none';
+            }
+        } else {
+            optList.style.display = '';
+            expectedBox.style.display = 'none';
+            if (q.answer_options) {
+                const letters = Object.keys(q.answer_options).sort();
+                letters.forEach(letter => {
+                    const li = document.createElement('li');
+                    const isCorrect = letter === q.correct_answer;
+                    if (isCorrect) li.classList.add('correct-answer');
+                    li.innerHTML = `<strong>${letter})</strong> ${escapeHtml(q.answer_options[letter])}` +
+                        (isCorrect ? ' <span class="correct-badge">Correct</span>' : '');
+                    optList.appendChild(li);
+                });
+            }
+        }
+
+        // Reset difficulty buttons
+        diffCurrentDifficulty = null;
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('diffReasoningInput').value = '';
+        document.getElementById('diffSubmitBtn').disabled = true;
+        document.getElementById('diffSubmitBtn').textContent = 'Submit';
+
+        // Restore previous answer if going back
+        const existing = diffResults.find(r => r.questionId === q.id);
+        if (existing) {
+            diffCurrentDifficulty = existing.difficulty;
+            document.querySelectorAll('.diff-btn').forEach(b => {
+                if (b.dataset.value === diffCurrentDifficulty) b.classList.add('selected');
+            });
+            document.getElementById('diffReasoningInput').value = existing.reasoning || '';
+            document.getElementById('diffSubmitBtn').disabled = false;
+            document.getElementById('diffSubmitBtn').textContent = 'Update';
+        }
+
+        document.getElementById('diffBackBtn').disabled = (diffCurrentIdx === 0);
+
+        // Progress
+        document.getElementById('diffProgressText').textContent = `${diffCurrentIdx + 1} / ${diffQuestions.length}`;
+        const answered = new Set(diffResults.map(r => r.questionId)).size;
+        document.getElementById('diffProgressBar').style.width = `${(answered / diffQuestions.length) * 100}%`;
+
+        window.scrollTo(0, 0);
+    }
+
+    // Difficulty button clicks
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            diffCurrentDifficulty = btn.dataset.value;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('diffSubmitBtn').disabled = false;
+        });
+    });
+
+    document.getElementById('diffSubmitBtn').addEventListener('click', () => {
+        const q = diffQuestions[diffCurrentIdx];
+        const resultData = {
+            questionId: q.id,
+            grade: q.grade || '',
+            discipline: q.discipline,
+            topic: q.topic || '',
+            correct_answer: q.correct_answer,
+            difficulty: diffCurrentDifficulty,
+            reasoning: document.getElementById('diffReasoningInput').value.trim()
+        };
+
+        const existingIdx = diffResults.findIndex(r => r.questionId === q.id);
+        if (existingIdx >= 0) {
+            diffResults[existingIdx] = resultData;
+        } else {
+            diffResults.push(resultData);
+        }
+
+        // Update progress bar
+        const answered = new Set(diffResults.map(r => r.questionId)).size;
+        document.getElementById('diffProgressBar').style.width = `${(answered / diffQuestions.length) * 100}%`;
+
+        advanceDiffToNext();
+    });
+
+    document.getElementById('diffBackBtn').addEventListener('click', () => {
+        if (diffCurrentIdx > 0) {
+            diffCurrentIdx--;
+            renderDiffQuestion();
+        }
+    });
+
+    function advanceDiffToNext() {
+        if (diffCurrentIdx < diffQuestions.length - 1) {
+            diffCurrentIdx++;
+            renderDiffQuestion();
+        } else {
+            const answeredIds = new Set(diffResults.map(r => r.questionId));
+            const allAnswered = diffQuestions.every(q => answeredIds.has(q.id));
+            if (allAnswered) {
+                showDiffResults();
+            } else {
+                const firstUnanswered = diffQuestions.findIndex(q => !answeredIds.has(q.id));
+                if (firstUnanswered >= 0) {
+                    diffCurrentIdx = firstUnanswered;
+                    renderDiffQuestion();
+                } else {
+                    showDiffResults();
+                }
+            }
+        }
+    }
+
+    function showDiffResults() {
+        document.getElementById('diffEvalPage').style.display = 'none';
+        document.getElementById('diffResultsPage').style.display = 'block';
+        document.getElementById('diffResultsName').textContent = userName;
+
+        // Tally ratings
+        const counts = { very_easy: 0, easy: 0, medium: 0, hard: 0, very_hard: 0 };
+        diffResults.forEach(r => { if (counts[r.difficulty] !== undefined) counts[r.difficulty]++; });
+
+        const statsGrid = document.getElementById('diffStatsGrid');
+        statsGrid.innerHTML = '';
+        Object.entries(DIFFICULTY_LABELS).forEach(([key, label]) => {
+            const box = document.createElement('div');
+            box.className = 'stat-box';
+            box.innerHTML = `<div class="stat-value" style="font-size:24px">${counts[key]}</div><div class="stat-label">${label}</div>`;
+            statsGrid.appendChild(box);
+        });
+
+        const orderedResults = diffQuestions.map(q => diffResults.find(r => r.questionId === q.id)).filter(Boolean);
+        const tbody = document.getElementById('diffResultsBody');
+        tbody.innerHTML = '';
+        orderedResults.forEach((r, i) => {
+            const tr = document.createElement('tr');
+            const badgeCls = DIFFICULTY_BADGE_CLASS[r.difficulty] || '';
+            const label = DIFFICULTY_LABELS[r.difficulty] || r.difficulty;
+            tr.innerHTML = `
+                <td>${i + 1}</td>
+                <td><span class="q-grade-badge" style="margin:0">${escapeHtml(r.grade)}</span></td>
+                <td>${escapeHtml(r.discipline)}</td>
+                <td>${escapeHtml(r.topic) || '<span style="color:#ccc">—</span>'}</td>
+                <td><strong>${escapeHtml(r.correct_answer)}</strong></td>
+                <td><span class="badge ${badgeCls}">${label}</span></td>
+                <td class="reasoning-cell">${r.reasoning ? escapeHtml(r.reasoning) : '<span style="color:#ccc">—</span>'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        window.scrollTo(0, 0);
+    }
+
+    document.getElementById('diffExportBtn').addEventListener('click', () => {
+        const ordered = diffQuestions.map(q => diffResults.find(r => r.questionId === q.id)).filter(Boolean);
+        const rows = [['#', 'name', 'question_id', 'grade', 'discipline', 'topic', 'correct_answer', 'difficulty', 'reasoning']];
+        ordered.forEach((r, i) => {
+            rows.push([
+                i + 1,
+                userName,
+                r.questionId,
+                `"${r.grade.replace(/"/g, '""')}"`,
+                `"${r.discipline.replace(/"/g, '""')}"`,
+                `"${r.topic.replace(/"/g, '""')}"`,
+                r.correct_answer,
+                r.difficulty,
+                `"${r.reasoning.replace(/"/g, '""')}"`
+            ]);
+        });
+        const csv = rows.map(r => r.join(',')).join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `difficulty_eval_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);
     });

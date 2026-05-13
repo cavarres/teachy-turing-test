@@ -10,6 +10,7 @@ Usage:
 import csv
 import json
 import pathlib
+import re
 import sys
 
 SRC_CSV  = pathlib.Path("evaluation_set_with_proposed.csv")
@@ -28,13 +29,13 @@ def load_questions(csv_path: pathlib.Path) -> list[dict]:
             alternatives = []
             if alts_raw:
                 try:
-                    parsed = json.loads(alts_raw)
-                    if isinstance(parsed, list):
-                        alternatives = parsed
-                    elif isinstance(parsed, dict):
-                        alternatives = list(parsed.values())
-                except json.JSONDecodeError:
-                    alternatives = [alts_raw]
+                    # The CSV uses {"opt1","opt2",...} with inner quotes escaped as \\"
+                    # Split on the "," boundary between items, then unescape inner quotes.
+                    inner = alts_raw[1:-1]  # strip outer { }
+                    parts = re.split('","', inner)
+                    alternatives = [p.strip('"').replace('\\"', '"') for p in parts]
+                except Exception:
+                    alternatives = []
 
             questions.append({
                 "presentation_index": int(row["presentation_index"]),

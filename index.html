@@ -1845,8 +1845,13 @@
             if (!row.presentation_index) continue;
             let alternatives = [];
             try {
-                const parsed = JSON.parse(row.alternatives || '[]');
-                alternatives = Array.isArray(parsed) ? parsed : [];
+                const raw = (row.alternatives || '').trim();
+                if (raw) {
+                    // The CSV uses {"opt1","opt2",...} with inner quotes escaped as \"
+                    // Split on the "," boundary between items, then unescape inner quotes.
+                    const inner = raw.slice(1, -1); // strip outer { }
+                    alternatives = inner.split('","').map(p => p.replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+                }
             } catch (e) { alternatives = []; }
             questions.push({
                 presentation_index: parseInt(row.presentation_index),

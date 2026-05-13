@@ -1709,10 +1709,11 @@
 
     function setTextWithMath(el, text) {
         let cleaned = cleanText(text);
-        // Escape HTML, then turn newlines into <br> and restore <br> tags
         let html = escapeHtml(cleaned);
         html = html.replace(/\r?\n/g, '<br>');
         html = html.replace(/&lt;br&gt;/gi, '<br>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
         el.innerHTML = formatMath(html);
         if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([el]);
     }

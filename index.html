@@ -7,6 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    MathJax = { tex: { inlineMath: [['\\(','\\)']] }, options: { skipHtmlTags: ['script','noscript','style','textarea'] } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -354,17 +358,6 @@
         }
 
         /* Expected answer box for open questions */
-        .expected-answer-box {
-            background: #E0F7F5; border: 1px solid #008F87; border-radius: 8px;
-            padding: 16px; margin-top: 8px;
-        }
-        .expected-answer-label {
-            font-size: 11px; font-weight: 700; color: #008F87; margin-bottom: 10px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .expected-answer-text {
-            font-size: 14px; line-height: 1.7; color: #2c3e50; white-space: pre-wrap;
-        }
 
         /* Difficulty options page */
         .diff-options-page {
@@ -720,10 +713,6 @@
                 <div class="q-images" id="diffQImages"></div>
                 <div class="q-prompt" id="diffQPrompt"></div>
                 <ul class="options-list" id="diffQOptions"></ul>
-                <div class="expected-answer-box" id="diffExpectedAnswer" style="display:none">
-                    <div class="expected-answer-label">Model Answer (Gabarito)</div>
-                    <div class="expected-answer-text" id="diffExpectedAnswerText"></div>
-                </div>
             </div>
 
             <div class="eval-panel" id="diffEvalPanelForm">
@@ -1700,6 +1689,39 @@
         'very_hard': 'badge-very-hard'
     };
 
+    const EDUCATION_LEVEL_LABEL = { '10': 'Elementary School', '20': 'Middle School', '30': 'High School' };
+
+    function cleanText(text) {
+        // Unescape sequences stored literally in the CSV
+        return text
+            .replace(/\\r\\n/g, '\n')  // literal \r\n → newline
+            .replace(/\\n/g, '\n')     // literal \n → newline
+            .replace(/\\"/g, '"')      // literal \" → "
+            .replace(/\\\\/g, '\\');   // literal \\ → \
+    }
+
+    function formatMath(text) {
+        // Replace {{MATH}}...{{/MATH}} with MathJax inline delimiters \(...\)
+        return text.replace(/\{\{MATH\}\}([\s\S]*?)\{\{\/MATH\}\}/g, (_, inner) => {
+            return '\\(' + inner + '\\)';
+        });
+    }
+
+    function setTextWithMath(el, text) {
+        let cleaned = cleanText(text);
+        // Escape HTML, then turn newlines into <br> and restore <br> tags
+        let html = escapeHtml(cleaned);
+        html = html.replace(/\r?\n/g, '<br>');
+        html = html.replace(/&lt;br&gt;/gi, '<br>');
+        el.innerHTML = formatMath(html);
+        if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([el]);
+    }
+
+    function formatAlt(text) {
+        // For answer alternatives: clean, escape, apply math (no line breaks needed)
+        return formatMath(escapeHtml(cleanText(text)));
+    }
+
     const LS_KEY = 'eval_progress_v1';
 
     // All 105 questions from the baked data (or loaded via dev file picker)
@@ -1978,44 +2000,47 @@
 
         document.getElementById('diffQNumber').textContent =
             'Question ' + (diffCurrentIdx + 1) + ' of ' + diffQuestions.length + ' (this batch)';
+        const levelLabel = EDUCATION_LEVEL_LABEL[q.education_level] || q.education_level || '';
         document.getElementById('diffQDiscipline').textContent =
             (q.subject_normalized || q.subject_raw || '') +
-            (q.education_level ? ' — Year ' + q.education_level : '');
-        document.getElementById('diffQGrade').textContent = q.education_level ? 'Year ' + q.education_level : '';
-        document.getElementById('diffQPrompt').textContent = q.description || '';
+            (levelLabel ? ' — ' + levelLabel : '');
+        document.getElementById('diffQGrade').textContent = levelLabel;
+        setTextWithMath(document.getElementById('diffQPrompt'), q.description || '');
 
         document.getElementById('diffQImages').innerHTML = '';
         document.getElementById('diffQImages').style.display = 'none';
 
         const optList = document.getElementById('diffQOptions');
-        const expectedBox = document.getElementById('diffExpectedAnswer');
-        const expectedText = document.getElementById('diffExpectedAnswerText');
         optList.innerHTML = '';
 
         const alts = q.alternatives || [];
         const answerType = (q.answer_type || '').toLowerCase().replace(/[_\s]/g, '');
+        const cleanedAnswer = cleanText(q.answer || '').trim();
 
         if (answerType === 'multiplechoice') {
             optList.style.display = '';
-            expectedBox.style.display = 'none';
             const letters = ['A', 'B', 'C', 'D', 'E'];
-            alts.forEach((alt, i) => {
+            // Build full options list: distractors + correct answer, shuffled
+            const distractors = alts.map(a => cleanText(a).trim());
+            const allOptions = [...distractors, cleanedAnswer];
+            // Seeded shuffle using presentation_index so order is stable on re-render
+            const seed = q.presentation_index;
+            for (let i = allOptions.length - 1; i > 0; i--) {
+                const j = (seed * 1664525 + 1013904223 + i * 22695477) % (i + 1);
+                [allOptions[i], allOptions[j]] = [allOptions[j], allOptions[i]];
+            }
+            allOptions.forEach((opt, i) => {
                 const li = document.createElement('li');
                 const letter = letters[i] || String(i + 1);
-                const isCorrect = alt === q.answer;
+                const isCorrect = opt === cleanedAnswer;
                 if (isCorrect) li.classList.add('correct-answer');
-                li.innerHTML = '<strong>' + letter + ')</strong> ' + escapeHtml(alt) +
+                li.innerHTML = '<strong>' + letter + ')</strong> ' + formatAlt(opt) +
                     (isCorrect ? ' <span class="correct-badge">Correct</span>' : '');
                 optList.appendChild(li);
             });
+            if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([optList]);
         } else {
             optList.style.display = 'none';
-            if (q.answer) {
-                expectedText.textContent = q.answer;
-                expectedBox.style.display = '';
-            } else {
-                expectedBox.style.display = 'none';
-            }
         }
 
         // Reset difficulty buttons

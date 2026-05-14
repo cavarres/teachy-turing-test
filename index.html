@@ -339,6 +339,13 @@
         }
         .diff-btn:hover { border-color: #008F87; background: #E0F7F5; }
         .diff-btn.selected { border-color: #008F87; background: #008F87; color: white; }
+        .flag-btn {
+            width: 100%; margin-top: 12px; padding: 10px 16px; border: 2px solid #ccc;
+            border-radius: 8px; background: white; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: inherit; color: #999;
+        }
+        .flag-btn:hover { border-color: #e67e22; color: #e67e22; background: #fff8f3; }
+        .flag-btn.selected { border-color: #e67e22; background: #e67e22; color: white; }
 
         /* Correct answer highlight in difficulty mode */
         .options-list li.correct-answer {
@@ -729,6 +736,8 @@
                         <button class="diff-btn" data-value="very_hard">Very Hard</button>
                     </div>
                 </div>
+
+                <button class="flag-btn" id="diffFlagBtn">Cannot evaluate — missing context</button>
 
                 <div class="reasoning-group">
                     <label for="diffReasoningInput">Notes about this question (optional):</label>
@@ -1203,6 +1212,7 @@
     let diffCurrentIdx = 0;
     let diffResults = [];
     let diffCurrentDifficulty = null;
+    let diffFlagged = false;
 
     // ============================================================
     // INIT — Menu
@@ -1924,7 +1934,7 @@
             'presentation_index', 'question_id', 'education_level',
             'subject_normalized', 'subject_raw', 'answer_type',
             'current_difficulty', 'proposed_difficulty', 'row_type',
-            'expert_difficulty', 'comment'
+            'expert_difficulty', 'flagged', 'comment'
         ];
         const rows = [header];
         indices.forEach(idx => {
@@ -1933,7 +1943,7 @@
                 r.presentation_index, csvCell(r.question_id), csvCell(r.education_level),
                 csvCell(r.subject_normalized), csvCell(r.subject_raw), csvCell(r.answer_type),
                 csvCell(r.current_difficulty), csvCell(r.proposed_difficulty), csvCell(r.row_type),
-                r.expert_difficulty, csvCell(r.comment)
+                r.expert_difficulty || '', r.flagged ? 'true' : 'false', csvCell(r.comment)
             ]);
         });
         triggerCsvDownload(rows, 'eval_progress_' + new Date().toISOString().slice(0,10) + '.csv');
@@ -1983,7 +1993,8 @@
             const row = {};
             headers.forEach((h, idx) => { row[h] = (cols[idx] || '').trim(); });
             const pi = parseInt(row.presentation_index);
-            if (!pi || !row.expert_difficulty) continue;
+            const isFlagged = row.flagged === 'true';
+            if (!pi || (!row.expert_difficulty && !isFlagged)) continue;
             result[pi] = {
                 presentation_index: pi,
                 question_id:        row.question_id || '',
@@ -1994,7 +2005,8 @@
                 current_difficulty:  row.current_difficulty || '',
                 proposed_difficulty: row.proposed_difficulty || '',
                 row_type:            row.row_type || '',
-                expert_difficulty:  row.expert_difficulty,
+                expert_difficulty:  row.expert_difficulty || '',
+                flagged:            isFlagged,
                 comment:            row.comment || ''
             };
         }
@@ -2050,9 +2062,11 @@
             optList.style.display = 'none';
         }
 
-        // Reset difficulty buttons
+        // Reset state
         diffCurrentDifficulty = null;
+        diffFlagged = false;
         document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('diffFlagBtn').classList.remove('selected');
         document.getElementById('diffReasoningInput').value = '';
         document.getElementById('diffSubmitBtn').disabled = true;
         document.getElementById('diffSubmitBtn').textContent = 'Submit';
@@ -2060,10 +2074,15 @@
         // Restore if already answered (back-nav within batch)
         const existing = completedByIndex[q.presentation_index];
         if (existing) {
-            diffCurrentDifficulty = existing.expert_difficulty;
-            document.querySelectorAll('.diff-btn').forEach(b => {
-                if (b.dataset.value === diffCurrentDifficulty) b.classList.add('selected');
-            });
+            if (existing.flagged) {
+                diffFlagged = true;
+                document.getElementById('diffFlagBtn').classList.add('selected');
+            } else {
+                diffCurrentDifficulty = existing.expert_difficulty;
+                document.querySelectorAll('.diff-btn').forEach(b => {
+                    if (b.dataset.value === diffCurrentDifficulty) b.classList.add('selected');
+                });
+            }
             document.getElementById('diffReasoningInput').value = existing.comment || '';
             document.getElementById('diffSubmitBtn').disabled = false;
             document.getElementById('diffSubmitBtn').textContent = 'Update';
@@ -2083,10 +2102,25 @@
     document.querySelectorAll('.diff-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             diffCurrentDifficulty = btn.dataset.value;
+            diffFlagged = false;
             document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
+            document.getElementById('diffFlagBtn').classList.remove('selected');
             document.getElementById('diffSubmitBtn').disabled = false;
         });
+    });
+
+    document.getElementById('diffFlagBtn').addEventListener('click', () => {
+        diffFlagged = !diffFlagged;
+        if (diffFlagged) {
+            diffCurrentDifficulty = null;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('diffFlagBtn').classList.add('selected');
+            document.getElementById('diffSubmitBtn').disabled = false;
+        } else {
+            document.getElementById('diffFlagBtn').classList.remove('selected');
+            document.getElementById('diffSubmitBtn').disabled = true;
+        }
     });
 
     document.getElementById('diffSubmitBtn').addEventListener('click', () => {
@@ -2102,7 +2136,8 @@
             current_difficulty:  q.current_difficulty || '',
             proposed_difficulty: q.proposed_difficulty || '',
             row_type:            q.row_type || '',
-            expert_difficulty:  diffCurrentDifficulty,
+            expert_difficulty:  diffFlagged ? '' : diffCurrentDifficulty,
+            flagged:            diffFlagged,
             comment:            document.getElementById('diffReasoningInput').value.trim()
         };
         saveStateToLocalStorage();
@@ -2160,8 +2195,8 @@
             const r = completedByIndex[q.presentation_index];
             if (!r) return;
             const tr = document.createElement('tr');
-            const badgeCls = DIFFICULTY_BADGE_CLASS[r.expert_difficulty] || '';
-            const label = DIFFICULTY_LABELS[r.expert_difficulty] || r.expert_difficulty;
+            const badgeCls = r.flagged ? '' : (DIFFICULTY_BADGE_CLASS[r.expert_difficulty] || '');
+            const label = r.flagged ? '<span style="color:#e67e22;font-weight:600">Flagged</span>' : (DIFFICULTY_LABELS[r.expert_difficulty] || r.expert_difficulty);
             tr.innerHTML =
                 '<td>' + r.presentation_index + '</td>' +
                 '<td><span class="q-grade-badge" style="margin:0">' + escapeHtml(r.education_level) + '</span></td>' +

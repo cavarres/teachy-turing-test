@@ -45,6 +45,7 @@ def load_questions(csv_path: pathlib.Path) -> list[dict]:
                 "answer":             row["answer"],
                 "answer_type":        row["answer_type"],
                 "education_level":    row["education_level"],
+                "grade":              row.get("grade", ""),
                 "subject_normalized": row["subject_normalized"],
                 "subject_raw":        row["subject_raw"],
                 "category_raw":       row["category_raw"],

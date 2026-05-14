@@ -1690,6 +1690,12 @@
     };
 
     const EDUCATION_LEVEL_LABEL = { '10': 'Elementary School', '20': 'Middle School', '30': 'High School' };
+    const GRADE_LABEL = {
+        'year1': 'Year 1', 'year2': 'Year 2', 'year3': 'Year 3', 'year4': 'Year 4',
+        'year5': 'Year 5', 'year6': 'Year 6', 'year7': 'Year 7', 'year8': 'Year 8',
+        'year9': 'Year 9', 'hs1': 'High School Year 1', 'hs2': 'High School Year 2',
+        'hs3': 'High School Year 3'
+    };
 
     function cleanText(text) {
         // Unescape sequences stored literally in the CSV
@@ -1723,7 +1729,7 @@
         return formatMath(escapeHtml(cleanText(text)));
     }
 
-    const LS_KEY = 'eval_progress_v1';
+    const LS_KEY = 'eval_progress_v2';
 
     // All 105 questions from the baked data (or loaded via dev file picker)
     let EVAL_QUESTIONS = EVAL_QUESTIONS_BAKED || null;
@@ -2001,7 +2007,7 @@
 
         document.getElementById('diffQNumber').textContent =
             'Question ' + (diffCurrentIdx + 1) + ' of ' + diffQuestions.length + ' (this batch)';
-        const levelLabel = EDUCATION_LEVEL_LABEL[q.education_level] || q.education_level || '';
+        const levelLabel = GRADE_LABEL[q.grade] || EDUCATION_LEVEL_LABEL[q.education_level] || q.education_level || '';
         document.getElementById('diffQDiscipline').textContent =
             (q.subject_normalized || q.subject_raw || '') +
             (levelLabel ? ' — ' + levelLabel : '');
@@ -2022,7 +2028,7 @@
             optList.style.display = '';
             const letters = ['A', 'B', 'C', 'D', 'E'];
             // Build full options list: distractors + correct answer, shuffled
-            const distractors = alts.map(a => cleanText(a).trim());
+            const distractors = alts.map(a => cleanText(a).trim()).filter(a => a !== '');
             const allOptions = [...distractors, cleanedAnswer];
             // Seeded shuffle using presentation_index so order is stable on re-render
             const seed = q.presentation_index;
